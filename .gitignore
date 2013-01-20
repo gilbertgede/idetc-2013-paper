@@ -22,8 +22,10 @@
 *.nav
 *.nlo
 *.out
+*.pdf
 *.pdfsync
 *.ps
+*.pyc
 *.snm
 *.synctex.gz
 *.toc
