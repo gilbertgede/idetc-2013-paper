@@ -66,7 +66,7 @@ Paper Outline
             * http://numfocus.org/projects-2/software-distributions/
     * How do I learn to use it?
         * SymPy Docs for sympy.physics.mechanics
-        * PyDy.org for start to finish problems (and accompanying pydy_examples git repo)
+        * PyDy.org for start to finish problems (and accompanying pydyexamples git repo)
     * What is it made of (modules, classes, and functions)?
         * SymPy basics that it uses?? Just a sentence or two. cite Sympy for more info.
         * list or simple figure
@@ -91,7 +91,7 @@ Paper Outline
         * defining problems visually (future problem design a graphical body assembler that builds mechanics code dynamically)
         * fast translation to 3D visualization
 
-*Conclusions
-*Acknowledgements
-*NSF
+* Conclusions
+* Acknowledgements
+* NSF
 
