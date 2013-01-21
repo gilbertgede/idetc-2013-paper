@@ -79,7 +79,7 @@ Equation Generation to Publication}
 
 \begin{document}
 
-\maketitle    
+\maketitle
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
@@ -274,8 +274,38 @@ created.
 Use of human-interface-devices (with a sufficiently fast computer) allows for
 real-time interaction between a user and a visualized simulation.
 \section*{SOFTWARE VALIDATION}
+Anytime new software is developed to generate equations of motion, the
+vailidity and accuracy of the software rightly comes into question. We have
+addressed these concerns in three ways to ensure that our code does generate
+correct equations of motion for arbitrarily complex systems. Firstly, the code
+is open source and well documented. This allows anyone to review the code and
+check for bugs. Linus's Law ``given enough eyeballs, all bugs
+are shallow'' (cite the Cathedral and the Bazaat) applies, if true.
+Secondly, the code functionality is heavily tested with unit testing.  That is,
+each piece of independent functionality in the code has a test (known
+input/output) in place that guarantees correct functioning of each unit. This
+helps ensure that not only the current code works as expected, but that future
+versions must also pass the tests. Thirdly, we've built in tests for well
+benchmarked problems in mutlibody dynamics. There are many problems, both
+simple and complex that have well known symbolic solutions. We have chosen
+several benchmark problems that include three dimensional, configuration and
+motion constraints, and exposing noncontributing forces. These problems are
+built in to the test suite for the package.
+
+One degree of freedom mass sprint dampero
+two degree of freedom mas sping damper (two particleso
+particle pendulum (kane and lagrange)
+rolling disc (kane and lagrange)
+rolling disc with aux speeds
+inverted pendulum on a cart
+disc on an inclined plane (lagrange only)
+double pendulum (langragne only)
+bicycle nonlinear and linear (Meijaard2007 and BasuMandall2007) - not built in as a test
+
+mechanics leverages two interdepedent methods to validate the accuracy of the
 tests within sympy: ensures stability/consistency during development
 benchmark validations (rolling disc, bicycle, other\ldots)
+%
 \section*{SOFTWARE DESIGN}
 The software design is influenced by both the underlying SymPy data types and
 Kane’s method for generating equations of motion for multibody systems. Kane’s
@@ -286,7 +316,7 @@ the software such that any equation of motion derivation method could be used
 and have recently included Lagrange’s method to demonstrate that ability. We
 did this by separating the kinematics derivation from the equations of motion
 generation. The package includes seven modules:
-essential.py
+\subsection*{essential.py}
 The essential.py module contains the basic building blocks for working with
 vector calculus and dynamic systems.
 
@@ -303,20 +333,20 @@ multiplication, division, dot products, cross products, and expression in
 different reference frames.
 
 The dyadic represents a
-point.py
+\subsection*{point.py}
 The point module contains a Point class that manages location information of a
 single point within a reference frame.
-particle.py
+\subsection*{particle.py}
 The Particle class adds the concept of mass to a Point object.
-rigidbody.py
+\subsection*{rigidbody.py}
 A RigidBody object contains a ReferenceFrame, mass, inertia dyadic, mass
 center.
-kane.py
+\subsection*{kane.py}
 The Kane class automatically generates the equations of motion for a collection
 of rigid bodies, particles, forces, torques, constraints, auxilary speeds.
-lagrange.py
+\subsection*{lagrange.py}
 blank
-functions.py
+\subsection*{functions.py}
 The functions module provides several
 
 talk about the modules and object model, maybe generate a UML
