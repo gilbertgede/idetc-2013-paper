@@ -32,17 +32,18 @@
 %% The default is oneside, onecolumn, 10pt, final
 
 %%% Replace here with information related to your conference
-\confshortname{IDETC/CIE 2009}
-\conffullname{the ASME 2009 International Design Engineering Technical Conferences \&\\
+\confshortname{IDETC/CIE 2013}
+\conffullname{the ASME 2013 International Design Engineering Technical Conferences \&\\
               Computers and Information in Engineering Conference}
 
 %%%%% for date in a single month, use
 %\confdate{24-28}
 %\confmonth{September}
 %%%%% for date across two months, use
-\confdate{August 30-September 2}
-\confyear{2009}
-\confcity{San Diego}
+\confdate{4-7}
+\confdate{August}
+\confyear{2013}
+\confcity{Portland}
 \confcountry{USA}
 
 %%% Replace DETC2009/MESA-12345 with the number supplied to you
@@ -54,45 +55,25 @@
 Equation Generation to Publication}
 
 %%% first author
-\author{Harry H. Cheng
-    \affiliation{
-	Integration Engineering Laboratory\\
-	Department of Mechanical and Aeronautical Engineering\\
-	University of California\\
-	Davis, California 95616\\
-    Email: hhcheng@ucdavis.edu
-    }	
-}
-
-%%% second author
-%%% remove the following entry for single author papers
-%%% add more entries for additional authors
-\author{First Coauthor\thanks{Address all correspondence to this author.} \\
-       {\tensfb Second Coauthor}     
-    \affiliation{Department or Division Name\\
-	Company or College Name\\
-	City, State (spelled out), Zip Code\\
-	Country (only if not U.S.)\\
-	Email address (if available)
-    }
+\author{Gilbet Gede\thanks{Address all correspondence to this author}, Dale L.
+Peterson, Jason K. Moore, Angadh S. Nanjangud, Mont Hubbard
+  \affiliation{
+	  Sports Biomechanics Laboratory\\
+    Department of Mechanical and Aerospace Engineering\\
+    University of California\\
+    Davis, California 95616\\
+    Email: \{ggede, dlpeterson, jkmoor, asnanjangud, mhubbard\}@ucdavis.edu
+  }
 }
 
 \begin{document}
 
-\maketitle    
+\maketitle
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
-{\it This article illustrates preparation of ASME paper using
-\LaTeX2\raisebox{-.3ex}{$\epsilon$}. An abstract for an ASME paper should be
-less than 150 words and is normally in italics.}
+Abstract goes here.
 \end{abstract}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{nomenclature}
-\entry{A}{You may include nomenclature here.}
-\entry{$\alpha$}{There are two arguments for each entry of the nomemclature environment, the symbol and the definition.}
-\end{nomenclature}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{INTRODUCTION}
@@ -274,6 +255,35 @@ created.
 Use of human-interface-devices (with a sufficiently fast computer) allows for
 real-time interaction between a user and a visualized simulation.
 \section*{SOFTWARE VALIDATION}
+Anytime new software is developed to generate equations of motion, the
+vailidity and accuracy of the software rightly comes into question. We have
+addressed these concerns in three ways to ensure that our code does generate
+correct equations of motion for arbitrarily complex systems. Firstly, the code
+is open source and well documented. This allows anyone to review the code and
+check for bugs. Linus's Law ``given enough eyeballs, all bugs
+are shallow'' (cite the Cathedral and the Bazaat) applies, if true.
+Secondly, the code functionality is heavily tested with unit testing.  That is,
+each piece of independent functionality in the code has a test (known
+input/output) in place that guarantees correct functioning of each unit. This
+helps ensure that not only the current code works as expected, but that future
+versions must also pass the tests. Thirdly, we've built in tests for well
+benchmarked problems in mutlibody dynamics. There are many problems, both
+simple and complex that have well known symbolic solutions. We have chosen
+several benchmark problems that include three dimensional, configuration and
+motion constraints, and exposing noncontributing forces. These problems are
+built in to the test suite for the package.
+
+One degree of freedom mass sprint dampero
+two degree of freedom mas sping damper (two particleso
+particle pendulum (kane and lagrange)
+rolling disc (kane and lagrange)
+rolling disc with aux speeds
+inverted pendulum on a cart
+disc on an inclined plane (lagrange only)
+double pendulum (langragne only)
+bicycle nonlinear and linear \cite{Meijaard2007} and BasuMandall2007) - not built in as a test
+
+mechanics leverages two interdepedent methods to validate the accuracy of the
 tests within sympy: ensures stability/consistency during development
 benchmark validations (rolling disc, bicycle, other\ldots)
 
@@ -294,7 +304,7 @@ the software such that any equation of motion derivation method could be used
 and have recently included Lagrange’s method to demonstrate that ability. We
 did this by separating the kinematics derivation from the equations of motion
 generation. The package includes seven modules:
-essential.py
+\subsection*{essential.py}
 The essential.py module contains the basic building blocks for working with
 vector calculus and dynamic systems.
 
@@ -311,20 +321,20 @@ multiplication, division, dot products, cross products, and expression in
 different reference frames.
 
 The dyadic represents a
-point.py
+\subsection*{point.py}
 The point module contains a Point class that manages location information of a
 single point within a reference frame.
-particle.py
+\subsection*{particle.py}
 The Particle class adds the concept of mass to a Point object.
-rigidbody.py
+\subsection*{rigidbody.py}
 A RigidBody object contains a ReferenceFrame, mass, inertia dyadic, mass
 center.
-kane.py
+\subsection*{kane.py}
 The Kane class automatically generates the equations of motion for a collection
 of rigid bodies, particles, forces, torques, constraints, auxilary speeds.
-lagrange.py
+\subsection*{lagrange.py}
 blank
-functions.py
+\subsection*{functions.py}
 The functions module provides several
 
 talk about the modules and object model, maybe generate a UML
@@ -344,4 +354,6 @@ also some packages which combine them:
 [list them]
 
 The packages
+\bibliographystyle{asmems4}
+\bibliography{asme2e}
 \end{document}
