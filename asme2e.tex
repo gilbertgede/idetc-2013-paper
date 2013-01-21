@@ -19,6 +19,8 @@
 %%% use twocolumn and 10pt options with the asme2e format
 \documentclass[twocolumn,10pt]{asme2e}
 \special{papersize=8.5in,11in}
+\usepackage{fancyvrb}
+
 
 %% The class has several options
 %  onecolumn/twocolumn - format for one or two columns per page
@@ -58,7 +60,7 @@ Equation Generation to Publication}
 \author{Gilbet Gede\thanks{Address all correspondence to this author}, Dale L.
 Peterson, Jason K. Moore, Angadh S. Nanjangud, Mont Hubbard
   \affiliation{
-	  Sports Biomechanics Laboratory\\
+    Sports Biomechanics Laboratory\\
     Department of Mechanical and Aerospace Engineering\\
     University of California\\
     Davis, California 95616\\
@@ -206,12 +208,62 @@ then supply the problem to the object which generates the EoM.
 This certainly sounds complicated, but the code below shows what it actually
 looks like.
 
-(code here)
+\begin{figure*}[tb]
+\begin{Verbatim}[frame=single]
+from sympy import symbols
+from sympy.physics.mechanics import *
+
+# Number of links
+n = 4
+
+# Coordinates, Speeds, and Derivatives thereof
+q = dynamicsymbols('q:' + str(n))
+qd = dynamicsymbols('q:' + str(n), 1)
+u = dynamicsymbols('u:' + str(n))
+ud = dynamicsymbols('u:' + str(n), 1)
+# Parameters and constants
+m = symbols('m:' + str(n))
+l = symbols('l:' + str(n))
+g = symbols('g')
+
+# The list of frames, starting with the Inertial Frame
+A = ReferenceFrame('A')
+Frames = [A]
+# Add N frames to the list, each oriented relative to the first frame
+[Frames.append(A.orientnew('A' + str(i), 'Axis', [q[i], A.z])) for i in range(n)]
+Frames = Frames[1:]
+# Set angular velocity for the N frames, relative to the first frame
+[Frames[i].set_ang_vel(A, u[i] * A.z) for i in range(n)]
+
+# The list of Points, starting with pivot of first link, which has 0 velocity
+# in the Inertial Frame
+Points = [Point('O')]
+Points[0].set_vel(A, 0)
+# Add another Point to the list, located from the previous point, by the ith
+# length in each link's x direction
+[Points.append(Points[-1].locatenew('P' + str(i), l[i] * Frames[i].x)) for i in range(n)]
+Points = Points[1:]
+# Use the 2 point theory on all the Points, in the Newtonian frame and on the
+# current link, from the previous Point
+[Points[i].v2pt_theory(Points[i], A, Frames[i]) for i in range(n)]
+
+# The list of Particles, constructed out of Points and masses
+Particles = [Particle('Pa' + str(i), Points[i], m[i]) for i in range(n)]
+# The list of forces - just gravity at each point
+FL = [(Points[i], m[i] * g * A.x) for i in range(n)]
+# Kinematic Differential Equations in simple form: qd - u = 0
+kd = [qd[i] - u[i] for i in range(n)]
+
+# Generate the equations
+KM = KanesMethod(A, q_ind=q, u_ind=u, kd_eqs=kd)
+(fr, frstar) = KM.kanes_equations(FL, Particles)
+\end{Verbatim}
+\end{figure*}
 
 The equations of motion have now been generated.
 In order to do anything useful though, we need to output and examine them.
 Within a console, there are commands to display the quantities generated, such
-as [mpprint], which generates the output below, showing the mass matrix of this
+as \begin{verbatim} mpprint \end{verbatim}, which generates the output below, showing the mass matrix of this
 problem with N=3:
 
 mpprint output
@@ -291,69 +343,52 @@ benchmark validations (rolling disc, bicycle, other\ldots)
 \section*{SOFTWARE DESIGN}
 Before discussing the intricacies of the design of sympy.physics.mechanics, we
 will discuss how to acquire this software and other parts of the scientific
-Python software stack.
-
-
-
-The software design is influenced by both the underlying SymPy data types and
-Kane’s method for generating equations of motion for multibody systems. Kane’s
-method powers many of the dynamic system software packages available [cite
-which ones] due to its ease of programmability and detailed bookkeeping
-structure. Kane’s method influenced the design a great deal but we structured
-the software such that any equation of motion derivation method could be used
-and have recently included Lagrange’s method to demonstrate that ability. We
-did this by separating the kinematics derivation from the equations of motion
-generation. The package includes seven modules:
-\subsection*{essential.py}
-The essential.py module contains the basic building blocks for working with
-vector calculus and dynamic systems.
-
-The ReferenceFrame class represents the concept of an inertial reference frame
-in a dynamic system. The ReferenceFrame has three orthonormal basis unit
-vectors and manages information about its orientation, angular velocity, and
-angular accelartion relative to other reference frames through a direction
-cosine matrix.
-
-The Vector class represents a general vector in a reference frame. Vectors are
-represented by measure numbers in the three basic vectors of a reference frame.
-Vectors support all of the common operations such as addition, subtraction,
-multiplication, division, dot products, cross products, and expression in
-different reference frames.
-
-The dyadic represents a
-\subsection*{point.py}
-The point module contains a Point class that manages location information of a
-single point within a reference frame.
-\subsection*{particle.py}
-The Particle class adds the concept of mass to a Point object.
-\subsection*{rigidbody.py}
-A RigidBody object contains a ReferenceFrame, mass, inertia dyadic, mass
-center.
-\subsection*{kane.py}
-The Kane class automatically generates the equations of motion for a collection
-of rigid bodies, particles, forces, torques, constraints, auxilary speeds.
-\subsection*{lagrange.py}
-blank
-\subsection*{functions.py}
-The functions module provides several
-
-talk about the modules and object model, maybe generate a UML
-
-talk about the documentation (both sympy docs, pydy.org, and pydy examples repo)
-
-Before addressing details of the software we have written, it should be
-mentioned how the various parts of PyDy can be acquired.
-SymPy: http://sympy.org/
-NumPy: http://www.numpy.org/
-SciPy: http://www.scipy.org/
-matplotlib: http://matplotlib.org/
+Python software stack; we also discuss where to learn about using it and
+receive help.
 All of these are liberally licensed using BSD or compatible; either stable
 releases or development branches can be downloaded.
-While these Python modules are maintained by different groups, but there are
-also some packages which combine them:
-[list them]
 
-The packages
+Each package used in this paper can be found at:
+\begin{itemize}
+\item SymPy: http://sympy.org/
+\item NumPy: http://www.numpy.org/
+\item SciPy: http://www.scipy.org/
+\item matplotlib: http://matplotlib.org/
+\end{itemize}
+Alternatively, there are numerous software distributions which contain some or
+all of these packages:
+\begin{itemize}
+\item Enthought: http://www.enthought.com/
+\item Sage: http://www.sagemath.org/
+\item Anaconda: http://continuum.io/
+\item Python(x,y): http://www.pythonxy.com
+\end{itemize}
+
+One of the major requirements for code added to SymPy is that every function
+and object has to be thoroughly tested and documented.
+SymPy has over 88\% of its code tested by the automated unit-tests; this
+ensures that no update causes regressions or breaks current functionality.
+Generally, the SymPy development branch is more stable and contains less bugs
+than the numbered releases.
+
+SymPy has its documentation available online: http://docs.sympy.org/dev/.
+It provides detailed instructions on installation, an introductory tutorial,
+lists common mistakes, details development procedures and the internal
+architecture, and contains detailed documentation for each submodule.
+The sympy.physics.mechanics documentation contains over 60 pages that aim to
+provide an overview of using this package and some of the math behind it.
+Additionally, a wiki for PyDy has been created at www.pydy.org.
+This is a user-editable guide to solving dynamics problems in Python, and
+contains numerous introductory examples (from system definition to simulation),
+examples of interfacing sympy.physics.mechanics with various compiled
+languages, and more advanced use cases to demonstrate capabilities.
+As PyDy is integrated into more courses, the goal is to allow students to
+utilize, refine, and expand the wiki page.
+
+
+
+\section*{CONCLUSIONS}
+
 \bibliographystyle{asmems4}
 \bibliography{asme2e}
 \end{document}
