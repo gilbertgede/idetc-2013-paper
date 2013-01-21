@@ -26,7 +26,7 @@ PLoS One software paper guidelines: http://www.plosone.org/static/guidelines#sof
 -------------
 Paper Outline
 -------------
-<ul>
+
 *Introduction
     +What do we mean by analytical dynamics?
     +Why do we need a tool for symbolic dynamics?
@@ -95,4 +95,3 @@ Paper Outline
 *Acknowledgements
 *NSF
 
-</ul>
