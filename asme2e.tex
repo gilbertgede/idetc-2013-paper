@@ -81,7 +81,7 @@ Abstract goes here.
 \section*{INTRODUCTION}
 There are many dynamic systems which can be better or more effectively studied
 when their equations of motion (EoM) are accessible in a symbolic form. For
-equations that are interpretable by a human’s eye (i.e. of reasonable length),
+equations that may be visually inspected (i.e., of reasonable length),
 symbolics are generally preferable because the interrelations of the variables
 and constants can give clear understanding to the nature of the problem without
 the need for numerical simulation. Many classic problems fit this category,
@@ -97,24 +97,25 @@ can validate the correctness of the derivation. Complex problems regarding
 biomechanics, spacecraft dynamics, and single-track vehicles have all been
 studied using symbolically formed equations of motion.
 
-Having the symbolic equations of motion available allows for the simulation
-just as numerical derivations do, but also allows for a more basic study of the
-system in question. It becomes possible to parametrically study system behavior
-by examining coefficients in the differential equations, equilibrium points,
-and system stability. The symbolic form also allows for more complicated tasks,
-such as analyzing how infinitesimal changes in system parameters (masses,
-lengths, inertias) affect the dynamics, studying lumped parameter
-discretization sizing, and analyzing how coordinate choices affect problem
-complexity or configuration singularities. It also becomes possible to share
-the equations of motion in a “written” form to other individuals for
-collaboration, validation, or comparison reasons. This includes the ease of
-sharing with other software packages for multi-domain or hardware-in-the-loop
-simulation or for use in optimization or optimal control problems.
+Having the symbolic equations of motion available permits numerical simulation,
+but also allows for a more basic study of the system in question. It becomes
+possible to parametrically study system behavior by examining coefficients in
+the differential equations, as well as compute symbolic expressions for
+equilibria and symbolic conditions for their stability. The symbolic form also
+allows for more complicated tasks, such as analyzing how infinitesimal changes
+in system parameters (masses, lengths, inertias) affect the dynamics, studying
+lumped parameter discretization sizing, and analyzing how coordinate choices
+affect problem complexity or configuration singularities. It also becomes
+possible to share the equations of motion in a ``written'' form to other
+individuals for collaboration, validation, or comparison reasons. This includes
+the ease of sharing with other software packages for multi-domain or
+hardware-in-the-loop simulation or for use in optimization or optimal control
+problems.
 
 Before adequate computing technology was available, the equations of motion for
-multibody dynamics problems had to be formed by hand. There are many
-methodologies to obtain the correct equations of motion [Newton-Euler,
-Lagrange, Kane, Hamilton, etc]. But all methods are tedious and error-prone
+multibody dynamics problems were formed by hand. There are many
+methodologies to obtain the correct equations of motion (Newton-Euler,
+Lagrange, Kane, Hamilton, etc). But all methods are tedious and error-prone
 when derived by hand, which limits the size and complexity of systems which can
 be studied. It only takes a handful of unique orientations between a small set
 of rigid bodies within the system to reach this point of complexity. The
@@ -122,63 +123,62 @@ introduction of computer algebra systems (CAS) eases the difficulties in
 forming the equations of motion, but does not completely eliminate them. The
 details of the symbolic algebra, differentiation, and vector calculus can be
 handled by a reliable CAS, eliminating the errors associated with those
-operations, leaving the user to worry about the correct dynamic derivation and
-less about the minor variable and sign errors. Furthermore, since the
-formulation of the symbolic equations of motion is done in software, the
+operations, allowing the user to think more about the implications of the
+dynamic equations and less about their correct derivation. Furthermore, since
+the formulation of the symbolic equations of motion is done in software, the
 equations of motion are immediately available for other computations that make
 use of the equations.
 
-The software presented herein is addresses the limitations of hand derivations
-and allows for the study of complex multibody dynamics problems from a symbolic
-point of view. There already exist software packages which similarly meet these
-limited criteria [Autolev/MotionGenesis, AutoSim/VehicleSim, others?]. But when
-developing our software, we also included several other unique requirements:
-\begin{itemize}
-  \item The software should be open source with a liberal software license and
-    developed collaboratively allowing for others to improve the functionality
-    and features. This will allow continued project development which is not
-    limited to or controlled by one individual or company and allow easy
-    integration and use by other projects.
-   \item Develop the software in an existing popular high level programming
-     language which has access to a large array of software packages. This will
-     allow for greater flexibility and power when end-users are working with
-     our software due to the ability to use only one programming language for
-     all of their needs or easy integration with other languages and software
-     packages.
-   \item The software should be built on top of a full-featured CAS with
-     many symbolic libraries allowing for more options in defining functions
-     and variables and more operations which can be performed on scalar or
-     matrix quantities.
-   \item The ability to easily transfer equations out of the software allowing
-     for publication-friendly equation writing and formatting symbolic terms
-     for other computing languages.
-\end{itemize}
-To meet these criteria, we selected Python as the base programming language.
-Python is open source, high level, easy to learn, widely available, cross
-platform, has a large scientific user base [SciPy,NumFocus or something in
-particular?], and has a popular and actively developed computer algebra system,
-SymPy [cite sympy]. The software package SymPy provides a symbolic manipulation
-library which we used as the basis for generating symbolic equations of motion.
-By including our code with SymPy, we’ve hopefully ensured the longevity and
-wide use of software. SymPy is part of the SciPy Stack specification, so it is
-included with all scientific python distributions including popular ones such
-as Enthought, Sage, Anaconda, and Python(x,y). SymPy is one of the more
-actively developed Python packages with a large number of maintainers, with a
-likely long future ahead of it. The SymPy development model allowed us to
-include whatever functionality we needed and allow for other users to view our
-code, suggest additional abilities, and improve upon and add to what we have
-already done.
+The software presented herein described addresses the limitations of hand
+derivations and allows for the study of complex multibody dynamics problems
+from a symbolic point of view. There already exist software packages which
+similarly meet these limited criteria [Autolev/MotionGenesis,
+AutoSim/VehicleSim, others?]. But when developing our software, we also
+included several other unique requirements:
+\begin{enumerate}
+  \item The software should be open source with a liberal license, encourage
+  meritocracy based collaborative development, and ensure continued project
+  development is not limited to or controlled by one any individual or company
+  and allow easy integration and use by other projects.
 
-Within this paper, we will discuss two main topics: the first is the EoM
-generation Python package, sympy.physics.mechanics, which is sub-package in
-SymPy and secondly, the overall workflow for analyzing multibody dynamic
-systems from derivation to simulation and visualization, which we call PyDy, an
-acronym for Python Dynamics. We will explore these two topics through an
-explanation of the software design and by demonstrating a test problem which
-displays software functionality and usage, how our software is incorporated
-into a workflow for analyzing dynamic systems, and the results of these
-processes. We will then discuss a number of other features, internal
-constructions within our software, and verification with benchmark examples.
+  \item The software should be written in a popular high level programming
+  language that balances efficient execution speed with efficient programmer
+  development time, and has a wide selection of scientific libraries (or can
+  conveniently interface with libraries written in other languages).
+
+  \item The software should be built on top of an existing full-featured
+  symbolic CAS that is also open source.
+
+  \item The software should easily export the equations in formats that are
+  publication friendly (i.e., \LaTeX) or are compatible with other populer
+  computing platforms and languages (i.e., modelica, C/C++/Fortan, MATLAB).
+\end{enumerate}
+To meet these criteria, we selected Python as the programming language to
+implement our software.  Python is interactive, high level, easy to learn,
+widely available, widely used (it is one of the top four languages supported at
+Google), cross platform, open source, and has a large scientific user base
+[SciPy,NumFocus or something in particular?].  Our software is distributed as a
+sub-package of SymPy [cite SymPy], which is a full featured CAS written in
+Python.  SymPy is is part of the SciPy Stack [citation needed] specification,
+so it is included with all scientific Python distributions including popular
+ones such as Enthought, Sage, Anaconda, and Python(x,y). SymPy is one of the
+more actively developed Python packages with a large number of maintainers,
+with a likely long future ahead of it. The SymPy development model allows us to
+include whatever functionality we need and allows for other users to view our
+code, suggest additional abilities, and improve upon and add to what we have
+already done, as well as ensure that the our code is constantly tested against
+any changes or updates to the base symbolic functionality offered by SymPy.
+
+In this paper, we discuss two main topics: 1. the interface to the EoM
+generation sub-package sympy.physics.mechanics, and 2. the workflow for
+analyzing multibody dynamic systems from derivation to simulation and
+visualization, which we call PyDy, an acronym for Python Dynamics. We will
+explore these two topics through an explanation of the software design and by
+demonstrating a test problem which displays software functionality and usage,
+how our software is incorporated into a workflow for analyzing dynamic systems,
+and the results of these processes. We will then discuss a number of other
+features, internal constructions within our software, and verification with
+benchmark examples.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{DEMONSTRATION PROBLEM}
 To demonstrate the value of PyDy, we have chosen a test problem which
