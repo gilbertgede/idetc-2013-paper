@@ -89,7 +89,7 @@ such as the mass-spring-damper, double pendulum, rolling disc, rattleback, and
 tippy-top. The benefits of symbolic equations of motion are not limited to
 these basic problems though. Certain larger, more complicated multibody systems
 can also be studied more effectively when the equations of motion are available
-symbolically. Advanced simplification routines can help reduced the equations
+symbolically. Advanced simplification routines can help reduce the equations
 to a human readable form and even if the final equations of motion are too
 lengthy for human consumption, the symbolic nature of the intermediate steps to
 get to the equation of motion are generally short enough that symbolic checks
@@ -118,7 +118,7 @@ methodologies to obtain the correct equations of motion (Newton-Euler,
 Lagrange, Kane, Hamilton, etc). But all methods are tedious and error-prone
 when derived by hand, which limits the size and complexity of systems which can
 be studied. It only takes a handful of unique orientations between a small set
-of rigid bodies within the system to reach this point of complexity. The
+of rigid bodies within a system to reach this point of complexity. The
 introduction of computer algebra systems (CAS) eases the difficulties in
 forming the equations of motion, but does not completely eliminate them. The
 details of the symbolic algebra, differentiation, and vector calculus can be
@@ -154,34 +154,40 @@ included several other unique requirements:
   computing platforms and languages (i.e., modelica, C/C++/Fortan, MATLAB).
 \end{enumerate}
 To meet these criteria, we selected Python as the programming language to
-implement our software.  Python is interactive, high level, easy to learn,
+implement our software. Python is an interactive, high level, easy to learn,
 widely available, widely used (it is one of the top four languages supported at
 Google), cross platform, open source, and has a large scientific user base
 [SciPy,NumFocus or something in particular?].  Our software is distributed as a
 sub-package of SymPy [cite SymPy], which is a full featured CAS written in
-Python.  SymPy is is part of the SciPy Stack [citation needed] specification,
+Python. SymPy is is part of the SciPy Stack [citation needed] specification,
 so it is included with all scientific Python distributions including popular
 ones such as Enthought, Sage, Anaconda, and Python(x,y). SymPy is one of the
-more actively developed Python packages with a large number of maintainers,
-with a likely long future ahead of it. The SymPy development model allows us to
-include whatever functionality we need and allows for other users to view our
-code, suggest additional abilities, and improve upon and add to what we have
-already done, as well as ensure that the our code is constantly tested against
-any changes or updates to the base symbolic functionality offered by SymPy.
+more actively developed Python packages with a large number of contributors,
+with a foreseeably long future ahead of it. The SymPy development model allows
+us to include whatever functionality we need and allows for other users to
+view our code, suggest additional abilities, and improve upon and add to what
+we have already done, as well as ensure that the our code is constantly tested
+against any changes or updates to the base symbolic functionality offered by
+SymPy.
 
-In this paper, we discuss two main topics: 1. the interface to the EoM
-generation sub-package sympy.physics.mechanics, and 2. the workflow for
-analyzing multibody dynamic systems from derivation to simulation and
-visualization, which we call PyDy, an acronym for Python Dynamics. We will
-explore these two topics through an explanation of the software design and by
-demonstrating a test problem which displays software functionality and usage,
-how our software is incorporated into a workflow for analyzing dynamic systems,
-and the results of these processes. We will then discuss a number of other
-features, internal constructions within our software, and verification with
-benchmark examples.
+In this paper, we discuss two main topics:
+\begin{enumerate}
+    \item The interface to the EoM generation sub-package
+        sympy.physics.mechanics
+
+    \item The workflow for analyzing multibody dynamic systems from derivation
+        to simulation and visualization, which we call PyDy, an acronym for
+        Python Dynamics.
+\end{enumerate}
+We will explore these two topics through an explanation of the software design
+and by demonstrating a test problem which displays software functionality and
+usage, how our software is incorporated into a workflow for analyzing dynamic
+systems, and the results of these processes. We will then discuss a number of
+other features, internal constructions within our software, and verification
+with benchmark examples.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{DEMONSTRATION PROBLEM}
-To demonstrate the value of PyDy, we have chosen a test problem which
+To demonstrate the efficacy of PyDy, we have chosen a test problem which
 demonstrates its strengths.
 The problem is shown in figure (X).
 It is a N-pendulum system - a series of N masses each connected by masses links
