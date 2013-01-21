@@ -32,17 +32,18 @@
 %% The default is oneside, onecolumn, 10pt, final
 
 %%% Replace here with information related to your conference
-\confshortname{IDETC/CIE 2009}
-\conffullname{the ASME 2009 International Design Engineering Technical Conferences \&\\
+\confshortname{IDETC/CIE 2013}
+\conffullname{the ASME 2013 International Design Engineering Technical Conferences \&\\
               Computers and Information in Engineering Conference}
 
 %%%%% for date in a single month, use
 %\confdate{24-28}
 %\confmonth{September}
 %%%%% for date across two months, use
-\confdate{August 30-September 2}
-\confyear{2009}
-\confcity{San Diego}
+\confdate{4-7}
+\confdate{August}
+\confyear{2013}
+\confcity{Portland}
 \confcountry{USA}
 
 %%% Replace DETC2009/MESA-12345 with the number supplied to you
@@ -54,14 +55,14 @@
 Equation Generation to Publication}
 
 %%% first author
-\author{Harry H. Cheng
+\author{Gilbet Gede
     \affiliation{
-	Integration Engineering Laboratory\\
-	Department of Mechanical and Aeronautical Engineering\\
+	Sports Biomechanics Laboratory\\
+	Department of Mechanical and Aerospace Engineering\\
 	University of California\\
 	Davis, California 95616\\
-    Email: hhcheng@ucdavis.edu
-    }	
+    Email: ggede@ucdavis.edu
+    }
 }
 
 %%% second author
@@ -74,6 +75,26 @@ Equation Generation to Publication}
 	City, State (spelled out), Zip Code\\
 	Country (only if not U.S.)\\
 	Email address (if available)
+    }
+}
+
+\author{Dale L. Peterson
+    \affiliation{
+	Sports Biomechanics Laboratory\\
+	Department of Mechanical and Aerospace Engineering\\
+	University of California\\
+	Davis, California 95616\\
+    Email: dlpeterson@ucdavis.edu
+    }
+}
+
+\author{Jason K. Moore
+    \affiliation{
+	Sports Biomechanics Laboratory\\
+	Department of Mechanical and Aerospace Engineering\\
+	University of California\\
+	Davis, California 95616\\
+    Email: jkmoor@ucdavis.edu
     }
 }
 
@@ -300,7 +321,7 @@ rolling disc with aux speeds
 inverted pendulum on a cart
 disc on an inclined plane (lagrange only)
 double pendulum (langragne only)
-bicycle nonlinear and linear (Meijaard2007 and BasuMandall2007) - not built in as a test
+bicycle nonlinear and linear \cite{Meijaard2007} and BasuMandall2007) - not built in as a test
 
 mechanics leverages two interdepedent methods to validate the accuracy of the
 tests within sympy: ensures stability/consistency during development
@@ -366,4 +387,6 @@ also some packages which combine them:
 [list them]
 
 The packages
+\bibliographystyle{asmems4}
+\bibliography{asme2e}
 \end{document}
