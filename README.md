@@ -27,6 +27,8 @@ PLoS One software paper guidelines: http://www.plosone.org/static/guidelines#sof
 Paper Outline
 -------------
 
+* Abstract
+
 * Introduction
     * What do we mean by analytical dynamics?
     * Why do we need a tool for symbolic dynamics?
@@ -52,12 +54,12 @@ Paper Outline
         * Example of 3D
     * It’d be pretty cool to have this whole problem in an IPython Notebook that you can easily download and run and play with. This could be included as supplementary materials.
 
-* Why should I trust you?
+* Software Validation (Why should I trust you?)
     * tests within sympy
         * ensures stability/consistency during development
     * benchmark validations (rolling disc, bicycle, other...)
 
-* How does it work?
+* Software Design (How does it work?)
     * How do I get it?
         * Download and installation (keep it simple and short)
             * sympy (talk about usefulness and stability of dev branch)

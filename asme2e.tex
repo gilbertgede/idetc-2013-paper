@@ -209,55 +209,8 @@ This certainly sounds complicated, but the code below shows what it actually
 looks like.
 
 \begin{figure*}[tb]
-\begin{Verbatim}[frame=single]
-from sympy import symbols
-from sympy.physics.mechanics import *
-
-# Number of links
-n = 4
-
-# Coordinates, Speeds, and Derivatives thereof
-q = dynamicsymbols('q:' + str(n))
-qd = dynamicsymbols('q:' + str(n), 1)
-u = dynamicsymbols('u:' + str(n))
-ud = dynamicsymbols('u:' + str(n), 1)
-# Parameters and constants
-m = symbols('m:' + str(n))
-l = symbols('l:' + str(n))
-g = symbols('g')
-
-# The list of frames, starting with the Inertial Frame
-A = ReferenceFrame('A')
-Frames = [A]
-# Add N frames to the list, each oriented relative to the first frame
-[Frames.append(A.orientnew('A' + str(i), 'Axis', [q[i], A.z])) for i in range(n)]
-Frames = Frames[1:]
-# Set angular velocity for the N frames, relative to the first frame
-[Frames[i].set_ang_vel(A, u[i] * A.z) for i in range(n)]
-
-# The list of Points, starting with pivot of first link, which has 0 velocity
-# in the Inertial Frame
-Points = [Point('O')]
-Points[0].set_vel(A, 0)
-# Add another Point to the list, located from the previous point, by the ith
-# length in each link's x direction
-[Points.append(Points[-1].locatenew('P' + str(i), l[i] * Frames[i].x)) for i in range(n)]
-Points = Points[1:]
-# Use the 2 point theory on all the Points, in the Newtonian frame and on the
-# current link, from the previous Point
-[Points[i].v2pt_theory(Points[i], A, Frames[i]) for i in range(n)]
-
-# The list of Particles, constructed out of Points and masses
-Particles = [Particle('Pa' + str(i), Points[i], m[i]) for i in range(n)]
-# The list of forces - just gravity at each point
-FL = [(Points[i], m[i] * g * A.x) for i in range(n)]
-# Kinematic Differential Equations in simple form: qd - u = 0
-kd = [qd[i] - u[i] for i in range(n)]
-
-# Generate the equations
-KM = KanesMethod(A, q_ind=q, u_ind=u, kd_eqs=kd)
-(fr, frstar) = KM.kanes_equations(FL, Particles)
-\end{Verbatim}
+\fvset{frame=single}
+\VerbatimInput{n_pends.py}
 \end{figure*}
 
 The equations of motion have now been generated.
