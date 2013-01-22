@@ -30,10 +30,10 @@ Points[0].set_vel(A, 0)
 # Add another Point to the list, located from the previous point, by the ith
 # length in each link's x direction
 [Points.append(Points[-1].locatenew('P' + str(i), l[i] * Frames[i].x)) for i in range(n)]
+[Points[i + 1].v2pt_theory(Points[i], A, Frames[i]) for i in range(n)]
 Points = Points[1:]
 # Use the 2 point theory on all the Points, in the Newtonian frame and on the
 # current link, from the previous Point
-[Points[i].v2pt_theory(Points[i], A, Frames[i]) for i in range(n)]
 
 # The list of Particles, constructed out of Points and masses
 Particles = [Particle('Pa' + str(i), Points[i], m[i]) for i in range(n)]
@@ -79,7 +79,7 @@ t = linspace(0, 10, 1000)
 # Integration
 y = odeint(rhs, y0, t)
 
-# Plotting
+# PLOTTING
 for i in range(n):
     figure(1)
     plot(t, y[:, i], label='q'+str(i))
