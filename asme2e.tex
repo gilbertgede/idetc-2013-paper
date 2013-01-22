@@ -526,15 +526,58 @@ spread out over several modules which are explained in the following list:
     differential equations, the desired independent and dependent generalized
     speeds, any configuration constraints, any velocity constraints, and any
     auxiliary speeds needed to compute non-contributing forces.
-  \item[lagrange.py] contains the \verb|LagrangesMethod| class with automates
+  \item[lagrange.py] contains the \verb|LagrangesMethod| class which automates
     the generation of a system's non-linear equations of motion via the methods
-    of Lagrangian mechanics \cite{Crandall1968}. A \verb|LagrangesMethod|
-    object is initialized with a Lagrangian and the desired generalized
-    coordinates and optionally forces acting on the system, velocity
-    constraints, and an inertial reference frame. If velocity constraints are
-    supplied, Lagrange multipliers are generated to account for them and
-    non-conservative forces are properly handled if applied they affect the
-    system.
+    of Lagrangian mechanics \cite{Crandall1968}. To derive the equations of
+    motion of a constrained system using Lagrange's equations, one requires the
+    configuration and velocity constraint equations, if any, before proceeding
+    to derive a complete set of dynamical equations that describe said system.
+    In sympy.physics.mechanics, the \verb|LagrangesMethod| class requires that
+    a \verb|LagrangesMethod| object is initialized with a Lagrangian and the
+    desired generalized coordinates and optionally forces acting on the system,
+    velocity constraints, and an inertial reference frame. If velocity
+    constraints are supplied, Lagrange multipliers are generated to account for
+    them and non-conservative forces are appropriately handled if applied they
+    affect the system.
+
+    In sympy.physics.mechanics, we assume that 3 basic sets of equations are
+    necessary to completely describe a system and obtain the symbolic equations
+    using \verb|LagrangesMethod|. They are:
+
+    \label{eqn:lag_qd}
+    \begin{align}
+        \mathbf{m_{c}}(q, t) \dot{q} + \mathbf{f_{c}}(q, t) &= 0
+    \end{align}
+
+    \label{eqn:lag_qdd}
+    \begin{align}
+        \mathbf{m_{dc}}(\dot{q}, q, t) \ddot{q} + \mathbf{f_{dc}}(\dot{q}, q,
+            t) &= 0
+    \end{align}
+
+    \label{eqn:lag_eom}
+    \begin{align}
+        \mathbf{m_d}(\dot{q}, q, t) \ddot{q} + \mathbf{\Lambda_c}(q, t)
+            \lambda + \mathbf{f_d}(\dot{q}, q, t) &= 0
+    \end{align}
+
+    where $q$ represents a vector of generalized coordinates, $\dot{q}$ and
+    $\ddot{q}$ are vectors of the first and second time derivatives of the
+    generalized coordinates, $\mathbf{\lambda}$ is a vector of the Lagrange
+    multipliers. $\mathbf{m_c}$, $\mathbf{m_dc}$, $\mathbf{m_d}$ and
+    $\mathbf{\Lambda_c}$ are coefficient matrices.
+    ~\ref{eqn:lag_qd} are the constraint equations, ~\ref{eqn:lag_qdd} is the
+    first derivative of the constraint equations, and ~\ref{eqn:lag_eom} are
+    the dynamical equations using Lagrange's equations. The
+    \verb|LagrangesMethod| class rearranges the equations of motion into the
+    following form:
+    \label{eqn:lag_rearr}
+    \begin{align}
+        \mathbf{M}(q, t) x = \mathbf{f}(q, \dot{q}, t)
+    \end{align}
+    where $mathbf{M}$ is the 'mass matrix', and $x$ is a vector of the states,
+    namely the $\ddot{q}$'s and $\lambda$'s, if any.
+
 \end{description}
 
 %%%%%%%%%%%% JASON ABOVE HERE %%%%%%%%%%%%
@@ -614,6 +657,26 @@ familiar with Python and SymPy.
 
 %%%%%%%%%%%% GILBERT ABOVE HERE %%%%%%%%%%
 %%%%%%%%%%%% ANGADH BELOW HERE %%%%%%%%%%%
+
+Dynamicists have varied tastes when it comes to naming conventions of
+orthonormal basis vectors. For example, while some may define $a_i
+\quad (i=x,y,z)$ as the basis vectors for a reference frame $A$, others may
+choose to define $a_i \quad (i=1,2,3)$ as the basis vectors for the same frame.
+This flexibility of indexing reference frames based on personal preference has
+been retained in PyDy.
+
+%%Limitations section. Not really certain how to expan too much on it but
+%I guess we can talk about it later today in the lab
+In testing PyDy thus far, we are yet to clearly establish its computational
+limitations. The most complex system studied using PyDy so far is the bicycle
+(cite Luke and Jason here, I guess), the derivation of whose linearized
+equations of motion take approximately two minutes.
+
+PyDy lacks the capability of setting up a system purely graphically i.e. by
+using graphical objects (like rigid slender rods, rigid cylinders, etc.) to
+configure a mechanical system. Currently, the study of any dynamical system
+can only be performed by writing a pythonic script to configure a system and
+further study it.
 
 %%%%%%%%%%%% ANGADH ABOVE HERE %%%%%%%%%%%
 
