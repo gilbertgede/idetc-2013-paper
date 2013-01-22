@@ -20,6 +20,8 @@
 \documentclass[twocolumn,10pt]{asme2e}
 \special{papersize=8.5in,11in}
 \usepackage{fancyvrb}
+\usepackage{graphicx}
+\usepackage{amsmath}
 
 
 %% The class has several options
@@ -208,7 +210,7 @@ then supply the problem to the object which generates the EoM.
 This certainly sounds complicated, but the code below shows what it actually
 looks like.
 
-\begin{figure*}[tb]
+\begin{figure*}
 \begin{Verbatim}[frame=single]
 from sympy import symbols
 from sympy.physics.mechanics import *
@@ -264,15 +266,28 @@ The equations of motion have now been generated.
 In order to do anything useful though, we need to output and examine them.
 Within a console, there are commands to display the quantities generated, such
 as \begin{verbatim} mpprint \end{verbatim}, which generates the output below, showing the mass matrix of this
-problem with N=3:
+problem with $N=2$:
 
-mpprint output
+%\begin{figure*}
+%\includegraphics[natwidth=470bp, natheight=93bp, width=3in]{mpprint_out.svg}
+%\includegraphics[width=3.5in]{mpprint_out.eps}
+%\end{figure*}
+mpprint graphic
 
 There is also LaTeX output functionality, which generates a string that can be
 directly copied/pasted into publications to generate LaTeX math equations (the
 same mass matrix is shown):
 
-mlatex output
+\begin{equation}
+\left[\begin{smallmatrix}l_{0}^{2} m_{0} + l_{0}^{2} m_{1} & l_{0} l_{1} m_{1}
+\left(\operatorname{sin}\left(q_{0}\right) \operatorname{sin}\left(q_{1}\right)
++ \operatorname{cos}\left(q_{0}\right)
+\operatorname{cos}\left(q_{1}\right)\right)\\l_{0} l_{1} m_{1}
+\left(\operatorname{sin}\left(q_{0}\right) \operatorname{sin}\left(q_{1}\right)
++ \operatorname{cos}\left(q_{0}\right)
+\operatorname{cos}\left(q_{1}\right)\right) & l_{1}^{2}
+m_{1}\end{smallmatrix}\right]
+\end{equation}
 
 Another part of studying dynamic systems is simulation and visualization of the
 results.
@@ -286,7 +301,43 @@ The SymPy translation function [lambdify] can convert symbolic expressions to a
 function using NumPy code.
 The code below (which follows the previously written code) shows this:
 
-(up to rhs function)
+\begin{figure*}
+\begin{Verbatim}[frame=single]
+# NUMERICAL SIMULATION
+from pylab import *
+from sympy import Dummy, lambdify
+from scipy.integrate import odeint
+
+# Substitution Values
+link_m = 0.01 / n
+link_l = 1. / n
+grav = 9.81
+parameter_dict = {g:grav}
+for i in range(n):
+    parameter_dict.update({l[i]:link_l, m[i]:link_m})
+# Used to leave sympy and go to numpy
+dummy_symbols = [Dummy() for i in q + u]
+temp_dict = dict(zip(q + u, dummy_symbols))
+# Actual substition
+MM = KM.mass_matrix_full.subs(KM.kindiffdict()).subs(temp_dict).subs(parameter_dict)
+Fo = KM.forcing_full.subs(KM.kindiffdict()).subs(temp_dict).subs(parameter_dict)
+
+# Construct the right-hand-side function
+m = lambdify(dummy_symbols, MM)
+f = lambdify(dummy_symbols, Fo)
+def rhs(y, t):
+    return array(linalg.solve(m(*y), f(*y))).T[0]
+
+# Initial conditions and time vector
+y0 = hstack((arange(n) * 0.01, arange(n) * 0))
+t = linspace(0, 10, 1000)
+
+# Integration
+y = odeint(rhs, y0, t)
+
+
+\end{Verbatim}
+\end{figure*}
 
 NumPy is an integral part of the larger Scientific Python ecosystem, focusing
 primarily on numerical arrays and matrices and operations on these arrays and
@@ -300,12 +351,33 @@ Using these three Python packages, we can numerically integrate ODEs and plot
 the results.
 The following code shows this process and figures (x) show the plots generated:
 
-(last bit of code)
+\begin{figure*}
+\begin{Verbatim}[frame=single]
+# PLOTTING
+for i in range(n):
+    figure(1)
+    plot(t, y[:, i], label='q'+str(i))
+    figure(2)
+    plot(t, y[:, i + n], label='u'+str(i))
+
+figure(1)
+legend(loc=0)
+xlabel('Time (s)')
+ylabel('Rotation (rad)')
+figure(2)
+legend(loc=0)
+xlabel('Time (s)')
+ylabel('Angular Rate (rad/s)')
+show()
+\end{Verbatim}
+\end{figure*}
 
 Using other Python packages, such as VisualPython, 3D animations can be
 created.
 Use of human-interface-devices (with a sufficiently fast computer) allows for
 real-time interaction between a user and a visualized simulation.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{SOFTWARE VALIDATION}
 Anytime new software is developed to generate equations of motion, the
 vailidity and accuracy of the software rightly comes into question. We have
@@ -382,9 +454,46 @@ This is a user-editable guide to solving dynamics problems in Python, and
 contains numerous introductory examples (from system definition to simulation),
 examples of interfacing sympy.physics.mechanics with various compiled
 languages, and more advanced use cases to demonstrate capabilities.
-As PyDy is integrated into more courses, the goal is to allow students to
-utilize, refine, and expand the wiki page.
+As PyDy is integrated into more university courses, the goal is to allow
+students to utilize, refine, and expand the wiki page.
 
+SymPy's symbolic manipulation library is the core of what we have written.
+The majority of objects that are created when using SymPy are \verb|Expr|,
+expressions.
+\verb|Expr| is the class from which other symbolic objects, such as symbols,
+adds and muls, or exponentials are subclasses of.
+The code in sympy.physics.mechanics makes use of these objects (although our
+code does not actually subclass them).
+Within sympy.physics.mechanics, there are a number of objects and functions
+spread out over several submodules:
+
+\begin{itemize}
+    \item essential.py
+        This module contains the basic building blocks for working
+        with vector calculus and dynamic systems.
+        \begin{itemize}
+            \item ReferenceFrame: this class represents rotational reference
+            frames for dynamic systems. ReferenceFrame has three orthonormal
+            basis unit vectors and manages information about its orientation,
+            angular velocity, and angular accelartion relative to other
+            reference frames through a direction cosine matrix. It is closely
+            tied to Vector - Vectors have associated ReferenceFrame's and
+            ReferenceFrames's have associated Vector's.
+            \item Vector: this class represents a general vector made up of
+            components in multiple ReferenceFrames.  Vectors support all of the
+            common operations such as addition, subtraction, multiplication,
+            division, dot products, cross products, and re-expression into
+            different ReferenceFrames.
+            \item Dyadic
+            \item dynamicsymbols
+        \end{itemize}
+    \item point.py
+    \item functions.py
+    \item particle.py
+    \item rigidbody.py
+    \item kane.py
+    \item lagrange.py
+\end{itemize}
 
 
 \section*{CONCLUSIONS}
