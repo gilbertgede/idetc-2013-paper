@@ -1,51 +1,41 @@
-from sympy import symbols
-from sympy.physics.mechanics import *
+from sympy import symbols             # Import the symbols function
+from sympy.physics.mechanics import * # Import mechanics classes and functions
 
-# Number of links
-n = 4
+N = 4                                 # Number of links in N-pendulum
 
-# Coordinates, Speeds, and Derivatives thereof
-q = dynamicsymbols('q:' + str(n))
-qd = dynamicsymbols('q:' + str(n), 1)
-u = dynamicsymbols('u:' + str(n))
-ud = dynamicsymbols('u:' + str(n), 1)
-# Parameters and constants
-m = symbols('m:' + str(n))
-l = symbols('l:' + str(n))
-g = symbols('g')
+q = dynamicsymbols('q:' + str(N))     # Generalized coordinates
+u = dynamicsymbols('u:' + str(N))     # Generalized speeds  
 
-# The list of frames, starting with the Inertial Frame
-A = ReferenceFrame('A')
-Frames = [A]
-# Add N frames to the list, each oriented relative to the first frame
-[Frames.append(A.orientnew('A' + str(i), 'Axis', [q[i], A.z])) for i in range(n)]
-Frames = Frames[1:]
-# Set angular velocity for the N frames, relative to the first frame
-[Frames[i].set_ang_vel(A, u[i] * A.z) for i in range(n)]
+m = symbols('m:' + str(N))            # Mass of each link
+l = symbols('l:' + str(N))            # Length of each link
+g, t = symbols('g t')                 # gravity and time symbols
 
-# The list of Points, starting with pivot of first link, which has 0 velocity
-# in the Inertial Frame
-Points = [Point('O')]
-Points[0].set_vel(A, 0)
-# Add another Point to the list, located from the previous point, by the ith
-# length in each link's x direction
-[Points.append(Points[-1].locatenew('P' + str(i), l[i] * Frames[i].x)) for i in range(n)]
-[Points[i + 1].v2pt_theory(Points[i], A, Frames[i]) for i in range(n)]
-Points = Points[1:]
-# Use the 2 point theory on all the Points, in the Newtonian frame and on the
-# current link, from the previous Point
+A = ReferenceFrame('A')               # Inertial reference frame
+Frames = []                           # List to hold n link frames
+P = Point('P')                        # Hinge point of top link
+P.set_vel(A, 0)                       # Set velocity of P in A to be zero
+Particles = []                        # List to hold N particles
+FL = []                               # List to hold N applied forces
+kd = []                               # List to hold kinematic differential
 
-# The list of Particles, constructed out of Points and masses
-Particles = [Particle('Pa' + str(i), Points[i], m[i]) for i in range(n)]
-# The list of forces - just gravity at each point
-FL = [(Points[i], m[i] * g * A.x) for i in range(n)]
-# Kinematic Differential Equations in simple form: qd - u = 0
-kd = [qd[i] - u[i] for i in range(n)]
+for i in range(N):
+    Ai = A.orientnew('A' + str(i), 'Axis', [q[i], A.z]) # Create a new frame
+    Ai.set_ang_vel(A, u[i] * A.z)                       # Set angular velocity
+    Frames.append(Ai)                                   # Add it to Frames list
+
+    Pi = P.locatenew('P' + str(i), l[i] * Ai.x)  # Create a new point,
+    Pi.v2pt_theory(P, A, Ai)                     # Set velocity
+    Pai = Particle('Pa' + str(i), Pi, m[i])      # Create a new particle
+    Particles.append(Pai)                        # Add Pai to Particles list
+
+    FL.append((Pi, m[i] * g * A.x)) # Set the force applied at i-th Point
+    P = Pi                          # P now represents the lowest Point
+
+    kd.append(q[i].diff(t) - u[i])  # Kinematic ODE:  dq_i / dt - u_i = 0
 
 # Generate the equations
 KM = KanesMethod(A, q_ind=q, u_ind=u, kd_eqs=kd)
 (fr, frstar) = KM.kanes_equations(FL, Particles)
-
 
 # NUMERICAL SIMULATION
 from pylab import *
@@ -53,11 +43,11 @@ from sympy import Dummy, lambdify
 from scipy.integrate import odeint
 
 # Substitution Values
-link_m = 0.01 / n
-link_l = 1. / n
+link_m = 0.01 / N
+link_l = 1. / N
 grav = 9.81
 parameter_dict = {g:grav}
-for i in range(n):
+for i in range(N):
     parameter_dict.update({l[i]:link_l, m[i]:link_m})
 # Used to leave sympy and go to numpy
 dummy_symbols = [Dummy() for i in q + u]
@@ -73,18 +63,18 @@ def rhs(y, t):
     return array(linalg.solve(m(*y), f(*y))).T[0]
 
 # Initial conditions and time vector
-y0 = hstack((arange(n) * 0.01, arange(n) * 0))
+y0 = hstack((arange(N) * 0.01, arange(N) * 0))
 t = linspace(0, 10, 1000)
 
 # Integration
 y = odeint(rhs, y0, t)
 
 # PLOTTING
-for i in range(n):
+for i in range(N):
     figure(1)
     plot(t, y[:, i], label='q'+str(i))
     figure(2)
-    plot(t, y[:, i + n], label='u'+str(i))
+    plot(t, y[:, i + N], label='u'+str(i))
 
 figure(1)
 legend(loc=0)

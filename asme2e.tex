@@ -183,22 +183,22 @@ features, internal constructions within our software, and verification with
 benchmark examples.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{DEMONSTRATION PROBLEM}
-To demonstrate the value of PyDy, we have chosen a test problem which
-demonstrates its strengths.
-The problem is shown in figure (X).
-It is a N-pendulum system - a series of N masses each connected by masses links
-subjected to a gravitational field.
+We demonstrate the value of PyDy through the derivation of an N-pendulum system
+shown in Figure (X).
 
 (Make a figure)
+\begin{figure*}
 
-We picked this problem because it is non-trivial, demonstrates the benefits of
-having the EoM generation code being written in a full-featured programming
-language, and can be written concisely.
-When writing the problem by hand, the angular velocity of each and every link
+\caption{N-pendulum system, a sequence of massive links connected by revolute
+joints subjected to a gravitational field.}
+\end{figure*}
+
+We selected this problem because it illustrates the power and simplicity of
+having EoM generation code available within a full-featured programming
+language.  When writing the problem by hand, the angular velocity of each and every link
 needs to be found, as well as the velocity of each connection.
-As the velocity of each connecting point is built off the previous links
-connecting point, each additional link has an increasingly large velocity (in
-terms of expression size) associated with it.
+Since the velocity of each connecting point is built off the previous links
+connecting point, the velocity expressions for the $i$-th mass centers become nested
 This is briefly shown in equations (x through x).
 (write equation for ang vel and vel, for a few connected links)
 
