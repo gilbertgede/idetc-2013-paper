@@ -451,6 +451,78 @@ spread out over several submodules:
 
 %%%%%%%%%%%% JASON ABOVE HERE %%%%%%%%%%%%
 %%%%%%%%%%%% GILBERT BELOW HERE %%%%%%%%%%
+As previously shown, the submodule essential.py (which is the core of
+sympy.physics.mechanics) is made of \verb|ReferenceFrame|, \verb|Vector|,
+\verb|Dyadic|, and \verb|dynamicsymbols| (as well as some output functions).
+These classes will be explained in some detail, to allow for a greater
+understanding of how our software was written and how it functions.
+
+Firstly, \verb|dynamicsymbols| will be explained - it is merely a shortcut to
+producing quantities which are functions of time.
+It is included in essential for 2 reasons: one has to do with Python importing
+requirements, and the other is that \verb|dynamicsymbols| defines the symbol
+used to represent time (default ``t'').
+All of the vector calculus methods assume that functions of time define
+rotations between \verb|ReferenceFrame|s; if basic symbols or expressions which
+are not functions of time are supplied, they will be treated as constants when
+differentiating with respect to time.
+
+The relationship between \verb|ReferenceFrame| and \verb|Vector| is very
+complex; we will describe it here using visual aids.
+Upon initialization, a \verb|ReferenceFrame| has 3 vectors which are created,
+representing the basis vectors of that reference frame.
+A \verb|Vector| is made up of a list of segments per frame; for each unique
+\verb|ReferenceFrame| involved in the definition of a vector, one element in
+this list exists.
+Each element in the list contains the associated \verb|ReferenceFrame| and a
+$3\times1$ SymPy matrix representing the measure numbers for each frame.
+The basis vectors which are created upon \verb|ReferenceFrame| initialization
+therefore have a list of length 1, made up of the \verb|ReferenceFrame| they
+are created for and the matrix with one element equal to 1 and two elements
+equal to 0. Figure (x) shows this relationship.
+
+As objects, both these basis vectors and other vectors are instances of the
+same \verb|Vector| class.
+More complicated \verb|Vector|s just consist of longer lists, and matrices
+which are not as basic; more frames can be introduced by adding vectors
+together or performing more advanced vector and vector calculus operations.
+Figure (x) shows how \verb|Vector| has its information stored.
+
+The final two parts of \verb|Vector|'s design are in the users interaction with
+these objects - creating and displaying them.
+Direct initialization of a \verb|Vector| object by a user should never take
+place; more complicated vectors will be formed out of basis vectors from the
+\verb|ReferenceFrame|s and operations between \verb|Vector|s.
+When displaying a \verb|Vector| object to the user, the complex implementation
+details of each instance are masked.
+Instead, the user only sees something along the following lines:
+\begin{verbatim}
+- l0*u0**2*A0.x + l0*u0'*A0.y - l1*u1**2*A1.x + l1*u1'*A1.y
+\end{verbatim}
+Each measure number and accompanying basis vector are printed out in a way that
+the output can be copied and reentered to form the \verb|Vector| again.
+This leaves our \verb|Vector| class as a symbolic object (although, not a
+subclass of the main SymPy \verb|Expr| class) which users will interact with on
+a symbolic/mathematical level; the complex initialization should never have to
+be done by hand, making use of this class easy for people not intimately
+familiar with Python and SymPy.
+
+
+%
+%How do these classes interact with each other (probably figures)?
+%    DONE except fig      ReferenceFrame/Vector \& Dyadic interactions (detailing essential.py, visually)
+%    ReferenceFrame Tree (how a tree is formed, possible pitfalls)
+%    DONE except fig      Vector Assemblage (vector is a list of parts of frames and frames - shown visually)
+%    Point Tree (similar to RF)
+%
+%How is this translated into equations?
+%    container classes (Particle, RigidBody)
+%    KanesMethod/LagrangesMethod
+%        Describe the classes and their methods, probably a page for each class. At least give the basic understanding of how the classes work.
+%        Talk about the methods for constraints and auxiliary speeds.
+%        mass matrix
+%        cite the paper that Luke and Gilbert wrote about linearization instead of writing about those methods here
+%        Explain the form of the EoMs that these methods produce and speak some on solving them for the u dots and the pitfalls associate with that, why it may be better to do it numerically
 
 %%%%%%%%%%%% GILBERT ABOVE HERE %%%%%%%%%%
 %%%%%%%%%%%% ANGADH BELOW HERE %%%%%%%%%%%
