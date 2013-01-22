@@ -365,89 +365,177 @@ tests within sympy: ensures stability/consistency during development
 benchmark validations (rolling disc, bicycle, other\ldots)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{SOFTWARE DESIGN}
+\section*{USAGE}
 %%%%%%%%%%%% JASON BELOW HERE %%%%%%%%%%%%
-Before discussing the intricacies of the design of sympy.physics.mechanics, we
-will discuss how to acquire this software and other parts of the scientific
-Python software stack; we also discuss where to learn about using it and
-receive help.
-All of these are liberally licensed using BSD or compatible; either stable
-releases or development branches can be downloaded.
+This section deals with obtaining the software demonstrated in this paper and
+the available resources for learning to use it. All of the software
+demonstrated in this paper can be readily obtained for free and installed on
+virtually any platform. Also, all of the packages are liberally licensed with a
+BSD or compatible license and either stable releases or development branches
+can be downloaded.
 
-Each package used in this paper can be found at:
-\begin{itemize}
-\item SymPy: http://sympy.org/
-\item NumPy: http://www.numpy.org/
-\item SciPy: http://www.scipy.org/
-\item matplotlib: http://matplotlib.org/
-\end{itemize}
-Alternatively, there are numerous software distributions which contain some or
-all of these packages:
-\begin{itemize}
-\item Enthought: http://www.enthought.com/
-\item Sage: http://www.sagemath.org/
-\item Anaconda: http://continuum.io/
-\item Python(x,y): http://www.pythonxy.com
-\end{itemize}
-
-One of the major requirements for code added to SymPy is that every function
-and object has to be thoroughly tested and documented.
-SymPy has over 88\% of its code tested by the automated unit-tests; this
-ensures that no update causes regressions or breaks current functionality.
+To obtain and use the core \verb|mechanics| package for symbolic equation of
+motion generation, one must simply download and install Python version 2.5+ and
+SymPy version 0.7.2+\footnote{One of the major requirements for code added to
+SymPy is that every function and object has to be thoroughly tested and
+documented. SymPy has over 88\% of its code tested by the automated unit-tests.
+This ensures that no update causes regressions or breaks current functionality.
 Generally, the SymPy development branch is more stable and contains less bugs
-than the numbered releases.
+than the numbered releases.}. Download and installation instructions for each
+can be found on the softwares' respective web sites, www.python.org and
+www.sympy.org.
 
-SymPy has its documentation available online: http://docs.sympy.org/dev/.
-It provides detailed instructions on installation, an introductory tutorial,
-lists common mistakes, details development procedures and the internal
-architecture, and contains detailed documentation for each submodule.
-The sympy.physics.mechanics documentation contains over 60 pages that aim to
-provide an overview of using this package and some of the math behind it.
-Additionally, a wiki for PyDy has been created at www.pydy.org.
-This is a user-editable guide to solving dynamics problems in Python, and
-contains numerous introductory examples (from system definition to simulation),
-examples of interfacing sympy.physics.mechanics with various compiled
-languages, and more advanced use cases to demonstrate capabilities.
-As PyDy is integrated into more university courses, the goal is to allow
-students to utilize, refine, and expand the wiki page.
-
-SymPy's symbolic manipulation library is the core of what we have written.
-The majority of objects that are created when using SymPy are \verb|Expr|,
-expressions.
-\verb|Expr| is the class from which other symbolic objects, such as symbols,
-adds and muls, or exponentials are subclasses of.
-The code in sympy.physics.mechanics makes use of these objects (although our
-code does not actually subclass them).
-Within sympy.physics.mechanics, there are a number of objects and functions
-spread out over several submodules:
-
+To run a full PyDy example from equation of motion generation to simulation and
+visualization, Python and at least the scientific Python (SciPy) software stack
+http://scipy.github.com/stackspec.html must be obtained. We make use of these
+packages in the SciPy stack in the previous demo problem:
+%
 \begin{itemize}
-    \item essential.py
-        This module contains the basic building blocks for working
-        with vector calculus and dynamic systems.
-        \begin{itemize}
-            \item ReferenceFrame: this class represents rotational reference
-            frames for dynamic systems. ReferenceFrame has three orthonormal
-            basis unit vectors and manages information about its orientation,
-            angular velocity, and angular accelartion relative to other
-            reference frames through a direction cosine matrix. It is closely
-            tied to Vector - Vectors have associated ReferenceFrame's and
-            ReferenceFrames's have associated Vector's.
-            \item Vector: this class represents a general vector made up of
-            components in multiple ReferenceFrames.  Vectors support all of the
-            common operations such as addition, subtraction, multiplication,
-            division, dot products, cross products, and re-expression into
-            different ReferenceFrames.
-            \item Dyadic
-            \item dynamicsymbols
-        \end{itemize}
-    \item point.py
-    \item functions.py
-    \item particle.py
-    \item rigidbody.py
-    \item kane.py
-    \item lagrange.py
+  \item SymPy: http://sympy.org/
+  \item NumPy: http://www.numpy.org/
+  \item SciPy: http://www.scipy.org/
+  \item matplotlib: http://matplotlib.org/
 \end{itemize}
+%
+Download and installation instructions for various platforms are available on
+their respective web sites. But it is worth noting that these packages are a
+part of most of the widely used scientific Python distributions. Downloading a
+distribution binary is generally the easiest method of installing \emph{all} of
+the needed software, especially for a newcomer to the software platform.
+Popular scientific distributions that will provide the needed software are
+listed below:
+%
+\begin{itemize}
+  \item Enthought: http://www.enthought.com/
+  \item Sage: http://www.sagemath.org/
+  \item Anaconda: http://continuum.io/
+  \item Python(x,y): http://www.pythonxy.com
+\end{itemize}
+%
+SciPy provides more comprehensive installation instructions than space permits
+here: http://scipy.github.com/install.html.
+
+The first step in doing multibody dynamics with Python is to get familiar using
+\verb|mechanics|\footnote{Some may prefer to learn Python and the SciPy Stack
+first, but the authors do not think this is such a necessity. It boils down to
+preference and learning style}. The first stop is the SymPy documentation which
+is available online at http://docs.sympy.org/. The documentation provides
+detailed instructions on installation, has introductory tutorials, lists common
+mistakes, details development procedures and the internal architecture, and
+contains detailed documentation for all of the subpackages and modules. In
+particular, the \verb|mechanics| documentation contains over 60 pages that aim
+to provide an overview of using the package and a brief introduction to the
+fundamentals dynamics. Several example classic dynamics problems are included
+in the documentation and there are even more in the \verb|mechanics.tests|
+package. Working through the material in the \verb|mechanics| documentation
+will provide the basics of generating the symbolic equations of motion of
+multibody systems.
+
+Additionally, a wiki for PyDy is maintained at www.pydy.org. This is a
+user-editable guide to solving dynamics problems in Python, and contains
+numerous introductory examples that demonstrate the process from system
+definition to simulation and visualization, examples of interfacing
+\verb|mechanics| with various compiled languages, and more advanced use cases
+to demonstrate capabilities. As the PyDy workflow is integrated into more
+university courses, the goal is to allow professors, teaching assistants, and
+students to utilize, refine, and expand the wiki.
+
+Finally, each of the software packages listed above maintains email lists and
+IRC channels for ``live'' help and the communities supporting the software are
+quite amicable to beginners. The PyDy Google Group is a good place to start if
+you have questions: https://groups.google.com/forum/?fromgroups#!forum/pydy.
+%
+\section*{SOFTWARE DESIGN}
+The software design for \verb|mechanics| is influenced by Python's object
+oriented nature, the underlying SymPy data types, Kane’s method for generating
+equations of motion\cite{Kane1985} for multibody systems, and the proprietary
+and now defunct software, Autolev\cite{Kane2000}, which also implemented Kane's
+method in a symbolic fashion.
+
+Kane’s method powers many of the dynamic system software packages available
+\cite{Sayers1990, Englighten2013} due to its detailed bookkeeping design and
+ease of mapping to a computer language. Kane’s method  has influenced the
+design of \verb|mechanics| a great deal but we structured the software such
+that any equation of motion derivation method could be utilized. This is
+possible because we separated the kinematic code from the equations of motion
+generation code. We have recently included Lagrange’s method to demonstrate
+that unique ability.
+
+SymPy's symbolic manipulation library provides the core functionality for the
+mechanics package. The majority of objects that are created when using SymPy
+are expression objects, \verb|Expr|.  Other symbolic objects in SymPy, such as
+symbols, adds and muls, or exponentials are inherit from the \verb|Expr| class.
+The \verb|mechanics| package is dependent on these objects, but not by
+inheritance. \verb|mechanics| is made up of a number of classes and functions
+spread out over several modules which are explained in the following list:
+%
+\begin{description}
+  \item[essential.py] contains the basic building blocks for working with
+    vector calculus and dynamic systems and includes the following classes and
+    functions:
+    \begin{description}
+      \item[ReferenceFrame] is a class that represent a rotational reference
+        frame in a dynamic system. \verb|ReferenceFrame| has three orthonormal
+        basis unit vectors and manages information about the frame's
+        orientation, angular velocity, and angular acceleration relative to
+        other reference frames through a direction cosine matrix and velocity
+        and acceleration vectors. It is closely interlinked to the
+        \verb|Vector| class, i.e. \verb|Vectors| have associated
+        \verb|ReferenceFrame|'s and \verb|ReferenceFrames|'s have associated
+        \verb|Vector|'s.
+      \item[Vector] is a class that represents a generic three dimensional
+        vector built from components in multiple frames of reference. Vectors
+        support all of the common operations as one would expect such as
+        addition, subtraction, multiplication, division, dot products, cross
+        products, outer products, and re-expression into different frames of
+        reference.
+      \item[Dyadic] is a class that represents a generic Dyadic. Dyadics are
+        used in this software as a basis independent method of defining an
+        inertia tensor. Dyadics support all of the common operations, much
+        similar to the Vector class.
+      \item[dynamicsymbols] is a function that is used to ease the generation
+        of time dependent variables and their derivatives. This variables are
+        created as SymPy \verb|UndefinedFunction|s. It is used the same fashion
+        as SymPy general \verb|symbol| function. The standard variable for time
+        can be set to something other than the default, \verb|t|.
+    \end{description}
+  \item[point.py] contains the \verb|Point| class. This class manages
+    and tracks the location, velocity, and acceleration of a point in space
+    relative to another point. It also provides some convenience methods to set
+    velocities and accelerations via the one point and two point theories
+    \cite{Kane1985}.
+  \item[functions.py] contains an assortment of convenience functions. For
+    example there is a function for generating inertia dyadics from tensor
+    notation, a function that outputs kinematical differential equations for
+    various body or spaced fixed coordinates and speeds, functions to generate
+    linear and angular momenta or kinetic and potential energies for a general
+    system of particles and bodies, among others.
+  \item[particle.py] contains the \verb|Particle| class which functions as a
+    container class for a point and an associated mass. It also has methods for
+    computing momentum and energy.
+  \item[rigidbody.py] contains the \verb|RigidBody| is analogous to the
+    \verb|Particle| class but for rigid bodies and contains mass, mass center,
+    inertia, and a reference frame associated with the rigid body. It also has
+    methods for momentum and energy.
+  \item[kane.py] contains the \verb|KanesMethod| class which automates the
+    generation of a system's non-linear equations of motion using Kane's
+    method\cite{Kane1985} and linear equations of motion using the method
+    presented in \cite{Peterson2013}. A \verb|KanesMethod| object is initialized
+    with an inertial reference frame, set of particles and/or rigid bodies, a
+    set of forces and torques acting on the system, the desired kinematical
+    differential equations, the desired independent and dependent generalized
+    speeds, any configuration constraints, any velocity constraints, and any
+    auxiliary speeds needed to compute non-contributing forces.
+  \item[lagrange.py] contains the \verb|LagrangesMethod| class with automates
+    the generation of a system's non-linear equations of motion via the methods
+    of Lagrangian mechanics \cite{Crandall1968}. A \verb|LagrangesMethod|
+    object is initialized with a Lagrangian and the desired generalized
+    coordinates and optionally forces acting on the system, velocity
+    constraints, and an inertial reference frame. If velocity constraints are
+    supplied, Lagrange multipliers are generated to account for them and
+    non-conservative forces are properly handled if applied they affect the
+    system.
+\end{description}
 
 %%%%%%%%%%%% JASON ABOVE HERE %%%%%%%%%%%%
 %%%%%%%%%%%% GILBERT BELOW HERE %%%%%%%%%%
