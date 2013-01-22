@@ -41,7 +41,25 @@ from pylab import *
 from sympy import Dummy, lambdify
 from scipy.integrate import odeint
 
-# Substitution Values
+def create_odeint_rhs(self, params):
+    """
+    Create a callable function that can be used by scipy.odeint to perform
+    numerical integration of dynamic equations of motion.
+
+    """
+
+    dummy_symbols = [Dummy() for i in self._q + self._u]
+    temp_dict = dict(zip(self._q + self._u, dummy_symbols))
+    MM = self.mass_matrix_full.subs(self.kindiffdict()).subs(temp_dict)
+    Fo = self.forcing_full.subs(self.kindiffdict()).subs(temp_dict)
+    # Construct the right-hand-side function
+    m = lambdify(dummy_symbols, MM)
+    f = lambdify(dummy_symbols, Fo)
+    def rhs(y, t, parameters):
+         return array(linalg.solve(m(*y), f(*y))).T[0]
+
+
+
 link_m = 0.01 / N
 link_l = 1. / N
 grav = 9.81
