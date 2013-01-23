@@ -275,7 +275,7 @@ The script first imports necessary functions and classes, then declares a
 number of symbolic variables that represent generalized coordinates,
 generalized speeds, constant parameters, reference frames, points and
 particles. A few empty lists are created before the for loop is entered; these
-lists are sequentially populated as the for loop procedes.  When the final
+lists are sequentially populated as the for loop proceeds.  When the final
 iteration of the for loop is complete, the kinematics and all active forces of
 the problem have been completely specified. The last two lines of the script
 take this specification of kinematics and dynamics and generate Kane's
@@ -393,7 +393,7 @@ real-time interaction between a user and a visualized simulation.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{SOFTWARE VALIDATION}
 Anytime new software is developed to generate equations of motion, the
-vailidity and accuracy of the software rightly comes into question. We have
+validity and accuracy of the software rightly comes into question. We have
 addressed these concerns in three ways to ensure that our code does generate
 correct equations of motion for arbitrarily complex systems. Firstly, the code
 is open source and well documented. This allows anyone to review the code and
@@ -852,7 +852,7 @@ both independent and auxiliary speeds, leaving the rest of the math the same.
 More plainly, for any instance of \verb|KanesMethod|, auxiliary speeds are
 removed from (set to 0) the accelerations and velocities that form
 $\underline{R}, \underline{T}, \underline{R}^*$, and $\underline{T}^*$.
-The only difference betwen the user's and the internal instance is which
+The only difference between the user's and the internal instance is which
 generalized speeds are used to form the partial velocities: independent or
 auxiliary.
 The relationship between the auxiliary speeds and constrained speeds is found
@@ -862,7 +862,7 @@ speeds.
 Furthermore, the transformation from unconstrained auxiliary equations to the
 constrained auxiliary equations ($\mathbf{F} + \mathbf{F}^*=0$ to
 $\tilde{\mathbf{F}} + \tilde{\mathbf{F}}^* = 0$ is performed exactly the same
-way, just using the matrix $A$ that relateds the auxiliary and constrained
+way, just using the matrix $A$ that relates the auxiliary and constrained
 speeds.
 The entire process is invisible from the user's perspective.
 
