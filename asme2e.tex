@@ -62,13 +62,13 @@ Equation Generation to Publication}
 
 %%% first author
 \author{Gilbet Gede\thanks{Address all correspondence to this author}, Dale L.
-Peterson, Angadh S. Nanjangud, Jason K. Moore
+Peterson, Angadh S. Nanjangud, Jason K. Moore, Mont Hubbard
   \affiliation{
     Sports Biomechanics Laboratory\\
     Department of Mechanical and Aerospace Engineering\\
     University of California\\
     Davis, California 95616\\
-    Email: \{ggede, dlpeterson, asnanjangud, jkmoor\}@ucdavis.edu
+    Email: \{ggede, dlpeterson, asnanjangud, jkmoor, mhubbard\}@ucdavis.edu
   }
 }
 
@@ -163,8 +163,8 @@ use of the equations.
 The software presented herein described addresses the limitations of hand
 derivations and allows for the study of complex multibody dynamics problems
 from a symbolic point of view. There already exist software packages which
-similarly meet these limited criteria [Autolev/MotionGenesis,
-AutoSim/VehicleSim, others?]. But when developing our software, we also
+similarly meet these limited criteria (e.g. Autolev/MotionGenesis,
+AutoSim/VehicleSim, others). But when developing our software, we also
 included several other unique requirements:
 \begin{enumerate}
   \item The software should be open source with a liberal license, encourage
@@ -590,7 +590,7 @@ spread out over several modules which are explained in the following list:
     \begin{align}
         \mathbf{M}(q, t) x = \mathbf{f}(q, \dot{q}, t)
     \end{align}
-    where $mathbf{M}$ is the 'mass matrix', and $x$ is a vector of the states,
+    where $\mathbf{M}$ is the 'mass matrix', and $x$ is a vector of the states,
     namely the $\ddot{q}$'s and $\lambda$'s, if any.
 
 \end{description}
@@ -849,7 +849,7 @@ removed from (set to 0) the accelerations and velocities that form
 $\underline{R}, \underline{T}, \underline{R}^*$, and $\underline{T}^*$.
 The only difference betwen the user's and the internal instance is which
 generalized speeds are used to form the partial velocities: independent or
-auxiliary?
+auxiliary.
 The relationship between the auxiliary speeds and constrained speeds is found
 the same way as the relationship between the independent speeds and constrained
 speeds - the matrix $A$ that is found relates auxiliary and constrained
