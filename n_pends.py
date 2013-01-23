@@ -45,7 +45,7 @@ parameters = [g]                                             # Parameter Definit
 parameter_vals = [9.81]                                      # First we define gravity
 for i in range(N):
     parameters += [l[i], m[i]]                               # Then each mass
-    parameter_vals += [0.01 / N, 1. / N]                     # and length
+    parameter_vals += [1. / N, 0.01 / N]                     # and length
 
 dummy_symbols = [Dummy() for i in q + u]                     # Necessary to translate
 dummy_dict = dict(zip(q + u, dummy_symbols))                 # out of functions of time
@@ -65,19 +65,26 @@ t = linspace(0, 10, 1000)                                    # Time vector
 y = odeint(rhs, y0, t, args=(parameter_vals,))               # Actual integration
 
 
+f, ax = subplots(2, sharex=True, sharey=False)
+f.set_size_inches(6.5, 6.5)
+
 # PLOTTING
 for i in range(N):
-    figure(1)
-    plot(t, y[:, i], label='q'+str(i))
-    figure(2)
-    plot(t, y[:, i + N], label='u'+str(i))
+    ax[0].plot(t, y[:, i], label='q'+str(i))
+    ax[1].plot(t, y[:, i + N], label='u'+str(i))
 
-figure(1)
-legend(loc=0)
-xlabel('Time (s)')
-ylabel('Rotation (rad)')
-figure(2)
-legend(loc=0)
-xlabel('Time (s)')
-ylabel('Angular Rate (rad/s)')
-show()
+#figure(1)
+ax[0].legend(loc=0)
+ax[1].legend(loc=0)
+ax[1].set_xlabel('Time [s]')
+ax[0].set_ylabel('Angle [rad]')
+ax[1].set_ylabel('Angular rate [rad/s]')
+f.subplots_adjust(hspace=0)
+setp(ax[0].get_xticklabels(), visible=False)
+tight_layout()
+savefig('four_link_pendulum_time_series.eps')
+# figure(2)
+# legend(loc=0)
+# xlabel('Time (s)')
+# ylabel('Angular Rate (rad/s)')
+#show()
