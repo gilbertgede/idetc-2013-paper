@@ -41,50 +41,29 @@ from pylab import *
 from sympy import Dummy, lambdify
 from scipy.integrate import odeint
 
-def create_odeint_rhs(self, params):
-    """
-    Create a callable function that can be used by scipy.odeint to perform
-    numerical integration of dynamic equations of motion.
-
-    """
-
-    dummy_symbols = [Dummy() for i in self._q + self._u]
-    temp_dict = dict(zip(self._q + self._u, dummy_symbols))
-    MM = self.mass_matrix_full.subs(self.kindiffdict()).subs(temp_dict)
-    Fo = self.forcing_full.subs(self.kindiffdict()).subs(temp_dict)
-    # Construct the right-hand-side function
-    m = lambdify(dummy_symbols, MM)
-    f = lambdify(dummy_symbols, Fo)
-    def rhs(y, t, parameters):
-         return array(linalg.solve(m(*y), f(*y))).T[0]
-
-
-
-link_m = 0.01 / N
-link_l = 1. / N
-grav = 9.81
-parameter_dict = {g:grav}
+parameters = [g]                                             # Parameter Definitions
+parameter_vals = [9.81]                                      # First we define gravity
 for i in range(N):
-    parameter_dict.update({l[i]:link_l, m[i]:link_m})
-# Used to leave sympy and go to numpy
-dummy_symbols = [Dummy() for i in q + u]
-temp_dict = dict(zip(q + u, dummy_symbols))
-# Actual substition
-MM = KM.mass_matrix_full.subs(KM.kindiffdict()).subs(temp_dict).subs(parameter_dict)
-Fo = KM.forcing_full.subs(KM.kindiffdict()).subs(temp_dict).subs(parameter_dict)
+    parameters += [l[i], m[i]]                               # Then each mass
+    parameter_vals += [0.01 / N, 1. / N]                     # and length
 
-# Construct the right-hand-side function
-m = lambdify(dummy_symbols, MM)
-f = lambdify(dummy_symbols, Fo)
-def rhs(y, t):
-    return array(linalg.solve(m(*y), f(*y))).T[0]
+dummy_symbols = [Dummy() for i in q + u]                     # Necessary to translate
+dummy_dict = dict(zip(q + u, dummy_symbols))                 # out of functions of time
+kds = KM.kindiffdict()                                       # Need to eliminate qdots
+MM = KM.mass_matrix_full.subs(kds).subs(dummy_dict)          # Substituting away qdots
+Fo = KM.forcing_full.subs(kds).subs(dummy_dict)              # and in dummy symbols
+mm = lambdify(dummy_symbols + parameters, MM)                # The actual call that gets
+fo = lambdify(dummy_symbols + parameters, Fo)                # us to a NumPy function
 
-# Initial conditions and time vector
-y0 = hstack((arange(N) * 0.01, arange(N) * 0))
-t = linspace(0, 10, 1000)
+def rhs(y, t, args):                                         # Creating the rhs function
+    into = hstack((y, args))                                 # States and parameters
+    return array(linalg.solve(mm(*into), fo(*into))).T[0]    # Solving for the udots
 
-# Integration
-y = odeint(rhs, y0, t)
+y0 = hstack((arange(N) * 0.01, arange(N) * 0))               # Initial conditions, q and u
+t = linspace(0, 10, 1000)                                    # Time vector
+
+y = odeint(rhs, y0, t, args=(parameter_vals,))               # Actual integration
+
 
 # PLOTTING
 for i in range(N):

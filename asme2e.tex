@@ -187,29 +187,28 @@ included several other unique requirements:
 To meet these criteria, we selected Python as the programming language to
 implement our software.  Python is interactive, high level, easy to learn,
 widely available, widely used (it is one of the top four languages supported at
-Google), cross platform, open source, and has a large scientific user base
-[SciPy,NumFocus or something in particular?].  Our software is distributed as a
-sub-package of SymPy [cite SymPy], which is a full featured CAS written in
-Python.  SymPy is is part of the SciPy Stack [citation needed] specification,
+Google), cross platform, open source, and has a large scientific user base .
+Our software is distributed as a sub-package of SymPy \cite{sympy2012}, which
+is a full featured CAS written in
+Python.  SymPy is is part of the SciPy Stack \cite{scipystack} specification,
 so it is included with all scientific Python distributions including popular
 ones such as Enthought, Sage, Anaconda, and Python(x,y). SymPy is one of the
 more actively developed Python packages with a large number of maintainers,
-with a likely long future ahead of it. The SymPy development model allows us to
+with a long future ahead of it. The SymPy development model allows us to
 include whatever functionality we need and allows for other users to view our
 code, suggest additional abilities, and improve upon and add to what we have
 already done, as well as ensure that the our code is constantly tested against
 any changes or updates to the base symbolic functionality offered by SymPy.
 
-In this paper, we discuss two main topics: 1. the interface to the EoM
-generation sub-package sympy.physics.mechanics, and 2. the workflow for
-analyzing multibody dynamic systems from derivation to simulation and
-visualization, which we call PyDy, an acronym for Python Dynamics. We will
-explore these two topics through an explanation of the software design and by
-demonstrating a test problem which displays software functionality and usage,
-how our software is incorporated into a workflow for analyzing dynamic systems,
-and the results of these processes. We will then discuss a number of other
-features, internal constructions within our software, and verification with
-benchmark examples.
+In this paper, we discuss two main topics. 1) The interface to the EoM
+generation sub-package sympy.physics.mechanics. 2) The workflow for analyzing
+multibody dynamic systems from derivation to simulation and visualization,
+which we call PyDy, an acronym for Python Dynamics. We will explore these two
+topics through an explanation of the software design and by demonstrating a
+test problem which displays software functionality and usage, how our software
+is incorporated into a workflow for analyzing dynamic systems, and the results
+of these processes. We will then discuss a number of other features, internal
+constructions within our software, and verification with benchmark examples.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{DEMONSTRATION PROBLEM}
 We demonstrate the value of PyDy through the derivation of the $N$-pendulum
@@ -221,7 +220,8 @@ angular velocity of each and every link must be found, as well as the velocity
 of each mass center.  The velocity of $i$-th mass center is
 \begin{align*}
 %\omega_i &= u_i \cdot a_z\\
-v_i &= v_{i-1} + \omega_i \times r^i \qquad (i = 1,\dots,N)
+\underline{v}_i &= \underline{v}_{i-1} + \underline{\omega}_i \times
+\underline{r}^i \qquad (i = 1,\dots,N)
 \end{align*}
 This nesting of velocities is best addressed with a classic for loop, something
 that is ideally suited for a computer (loop unrolling is difficult by hand when
@@ -262,14 +262,8 @@ joints subjected to a gravitational field.}
 
 There are other options besides \LaTeX output which are useful.  Within a
 console, commands to ``pretty print'' symbolic expressions can be performed
-with \verb|mpprint()|, which generates the output below, showing the mass
-matrix of the $N$-pendulum for $N=2$:
-
-%\begin{figure*}
-%\includegraphics[natwidth=470bp, natheight=93bp, width=3in]{mpprint_out.svg}
-%\includegraphics[width=3.5in]{mpprint_out.eps}
-%\end{figure*}
-mpprint graphic
+with \verb|mpprint|, which generates the output formatted just like the
+\LaTeX equation above, but within the terminal.
 
 Another part of studying dynamic systems is simulation and visualization of the
 results.  SymPy can only solve relatively simple ODEs internally, so the
@@ -277,46 +271,41 @@ equations of motion generated for more complex systems need to be passed to
 other numerical integrators.  Currently, sympy.physics.mechanics can make use
 of existing SymPy translation functions, but more advanced options to generate
 compiled code are being developed and guided by user demands.  The SymPy
-translation function [lambdify] can convert symbolic expressions to a function
-using NumPy code.  The code below (which follows the previously written code)
-shows this:
+translation function \verb|lambdify| can convert symbolic expressions to a
+function using NumPy code.  The code in \ref{fig:numerical_code} (which follows
+the previously written code) shows this:
 
 \begin{figure*}
 \begin{Verbatim}[frame=single]
-# NUMERICAL SIMULATION
 from pylab import *
 from sympy import Dummy, lambdify
 from scipy.integrate import odeint
 
-# Substitution Values
-link_m = 0.01 / n
-link_l = 1. / n
-grav = 9.81
-parameter_dict = {g:grav}
-for i in range(n):
-    parameter_dict.update({l[i]:link_l, m[i]:link_m})
-# Used to leave sympy and go to numpy
-dummy_symbols = [Dummy() for i in q + u]
-temp_dict = dict(zip(q + u, dummy_symbols))
-# Actual substition
-MM = KM.mass_matrix_full.subs(KM.kindiffdict()).subs(temp_dict).subs(parameter_dict)
-Fo = KM.forcing_full.subs(KM.kindiffdict()).subs(temp_dict).subs(parameter_dict)
+parameters = [g]                                             # Parameter Definitions
+parameter_vals = [9.81]                                      # First we define gravity
+for i in range(N):
+    parameters += [l[i], m[i]]                               # Then each mass
+    parameter_vals += [0.01 / N, 1. / N]                     # and length
 
-# Construct the right-hand-side function
-m = lambdify(dummy_symbols, MM)
-f = lambdify(dummy_symbols, Fo)
-def rhs(y, t):
-    return array(linalg.solve(m(*y), f(*y))).T[0]
+dummy_symbols = [Dummy() for i in q + u]                     # Necessary to translate
+dummy_dict = dict(zip(q + u, dummy_symbols))                 # out of functions of time
+kds = KM.kindiffdict()                                       # Need to eliminate qdots
+MM = KM.mass_matrix_full.subs(kds).subs(dummy_dict)          # Substituting away qdots
+Fo = KM.forcing_full.subs(kds).subs(dummy_dict)              # and in dummy symbols
+mm = lambdify(dummy_symbols + parameters, MM)                # The actual call that gets
+fo = lambdify(dummy_symbols + parameters, Fo)                # us to a NumPy function
 
-# Initial conditions and time vector
-y0 = hstack((arange(n) * 0.01, arange(n) * 0))
-t = linspace(0, 10, 1000)
+def rhs(y, t, args):                                         # Creating the rhs function
+    into = hstack((y, args))                                 # States and parameters
+    return array(linalg.solve(mm(*into), fo(*into))).T[0]    # Solving for the udots
 
-# Integration
-y = odeint(rhs, y0, t)
+y0 = hstack((arange(N) * 0.01, arange(N) * 0))               # Initial conditions, q and u
+t = linspace(0, 10, 1000)                                    # Time vector
 
+y = odeint(rhs, y0, t, args=(parameter_vals,))               # Actual integration
 
 \end{Verbatim}
+\label{ref:numerical_code}
 \end{figure*}
 
 NumPy is an integral part of the larger Scientific Python ecosystem, focusing
@@ -470,18 +459,18 @@ students to utilize, refine, and expand the wiki.
 Finally, each of the software packages listed above maintains email lists and
 IRC channels for ``live'' help and the communities supporting the software are
 quite amicable to beginners. The PyDy Google Group is a good place to start if
-you have questions: \verb|https://groups.google.com/forum/?fromgroups#!forum/pydy|.
+you have questions \cite{pydy_google_group}.
 %
 \section*{SOFTWARE DESIGN}
 The software design for \verb|mechanics| is influenced by Python's object
 oriented nature, the underlying SymPy data types, Kane’s method for generating
 equations of motion\cite{Kane1985} for multibody systems, and the proprietary
-and now defunct software, Autolev\cite{Kane2000}, which also implemented Kane's
+(now defunct) software, Autolev\cite{Kane2000}, which also implemented Kane's
 method in a symbolic fashion.
 
 Kane’s method powers many of the dynamic system software packages available
 \cite{Sayers1990, Englighten2013} due to its detailed bookkeeping design and
-ease of mapping to a computer language. Kane’s method  has influenced the
+ease of mapping to computing languages. Kane’s method  has influenced the
 design of \verb|mechanics| a great deal but we structured the software such
 that any equation of motion derivation method could be utilized. This is
 possible because we separated the kinematic code from the equations of motion
@@ -507,24 +496,23 @@ spread out over several modules which are explained in the following list:
         orientation, angular velocity, and angular acceleration relative to
         other reference frames through a direction cosine matrix and velocity
         and acceleration vectors. It is closely interlinked to the
-        \verb|Vector| class, i.e. \verb|Vectors| have associated
-        \verb|ReferenceFrame|'s and \verb|ReferenceFrames|'s have associated
-        \verb|Vector|'s.
+        \verb|Vector| class, i.e. \verb|Vector|s have associated
+        \verb|ReferenceFrame|s and \verb|ReferenceFrames|s have associated
+        \verb|Vector|s.
       \item[Vector] is a class that represents a generic three dimensional
         vector built from components in multiple frames of reference. Vectors
         support all of the common operations as one would expect such as
         addition, subtraction, multiplication, division, dot products, cross
-        products, outer products, and re-expression into different frames of
-        reference.
+        products, outer products, re-expression into different reference
+        frames, and frame dependent differentiation.
       \item[Dyadic] is a class that represents a generic Dyadic. Dyadics are
         used in this software as a basis independent method of defining an
         inertia tensor. Dyadics support all of the common operations, much
         similar to the Vector class.
-      \item[dynamicsymbols] is a function that is used to ease the generation
-        of time dependent variables and their derivatives. This variables are
-        created as SymPy \verb|UndefinedFunction|s. It is used the same fashion
-        as SymPy general \verb|symbol| function. The standard variable for time
-        can be set to something other than the default, \verb|t|.
+      \item[dynamicsymbols] is a function that is used to facilitate the generation
+        of time dependent quantities and their derivatives. This variables are
+        created as SymPy \verb|Function|s of time, where the default time is
+        the symbols \verb|t|.
     \end{description}
   \item[point.py] contains the \verb|Point| class. This class manages
     and tracks the location, velocity, and acceleration of a point in space
@@ -612,7 +600,7 @@ When displaying a \verb|Vector| object to the user, the complex implementation
 details of each instance are masked.
 Instead, the user only sees something along the following lines:
 \begin{verbatim}
-- l0*u0**2*A0.x + l0*u0'*A0.y - l1*u1**2*A1.x + l1*u1'*A1.y
+3*A.x + 5*A.y + cos(theta)*B.x + sin(theta)*C.z
 \end{verbatim}
 Each measure number and accompanying basis vector are printed out in a way that
 the output can be copied and reentered to form the \verb|Vector| again.
@@ -664,12 +652,11 @@ However, the \verb|Point| class does not extend this functionality to
 velocities; it only works for positions.
 This is due to the complexities of identifying bound/unbound vectors within
 reference frames.
-It has been both ``safer'' and more consistent to ask the user to find these
-velocities themselves rather than attempting to do it automatically (and
-frequently incorrectly).
+It has been more reliable to ask the user to find these velocities themselves
+rather than attempting to do it automatically (and frequently incorrectly).
 In order to help with this task, the \verb|Point| class has a number of methods
-using the 1-point and 2-point theorems, as detailed by Kane \cite{Kane1985}, to
-make this step easier.
+using the one point and one point theorems \cite{Kane1985} to make this step
+easier.
 
 The \verb|Dyadic| object has a similar construction approach as \verb|Vector|;
 it is made up of a list of components.
@@ -702,21 +689,21 @@ Here we will go over some of the fundamentals of the KanesMethod object; the
 detailed call-signatures of this object can be found in the documentation.
 Upon initialization, it takes in a number of properties which describe the
 system: the inertial reference frame; independent and constrained generalized
-coordinates; independent, auxiliary, and constrained generalized speeds; and
-configuration, velocity, and (optionally) acceleration constraint equations.
-At this point, the relationships between the independent and constrained speeds
-are found as in Kane's Method \cite{Kane1985}; this is shown in equation
-(\ref{eq:Ars_forming}), where $f_v(q, u, t)$ is the list of constraint equations
-and $u$ is the list of independent and constrained speeds.
+coordinates; independent, auxiliary, and constrained (dependent) generalized
+speeds; and configuration, velocity, and (optionally) acceleration constraint
+equations.  At this point, the relationships between the independent and
+constrained speeds are found as in Kane's Method \cite{Kane1985}; this is shown
+in equation (\ref{eq:Ars_forming}), where $f_v(q, u, t)$ is the list of
+constraint equations and $u$ is the list of independent and dependent speeds.
 \begin{align}
 %\begin{subequations}
 \mathbf{0} &= f_v(q, u, t) \\
-\mathbf{0} &= \nabla_u f_v(q, u, t) \mathbf{u}
+\mathbf{0} &= \nabla_u f_v(q, u, t) \mathbf{u} \\
            &= \mathbf{B} \mathbf{u} \\
-\mathbf{0} &= \mathbf{B}_{ind} \mathbf{u}_{ind} + \mathbf{B}_{con}
-\mathbf{u}_{con} \\
-\mathbf{u}_{con} &= - \mathbf{B}_{con}^{-1} \mathbf{B}_{ind} \mathbf{u}_{ind} \\
-\mathbf{u}_{con} &= \mathbf{A}_{rs} \mathbf{u}_{ind}
+\mathbf{0} &= \mathbf{B}_{ind} \mathbf{u}_{ind} + \mathbf{B}_{dep}
+\mathbf{u}_{dep} \\
+\mathbf{u}_{dep} &= - \mathbf{B}_{dep}^{-1} \mathbf{B}_{ind} \mathbf{u}_{ind} \\
+\mathbf{u}_{dep} &= \mathbf{A} \mathbf{u}_{ind}
 %\end{subequations}
 \label{eq:Ars_forming}
 \end{align}
@@ -734,8 +721,8 @@ number of constrained speeds; this is shown in equation (\ref{eq:uncon_to_con}).
 
 \begin{equation}
 \label{eq:uncon_to_con}
-\tilde{\mathbf{F}}_{1-p} = \mathbf{F}_{1-p} + \mathbf{A}_{rs}^{T}
-\mathbf{F}_{p-n}
+\tilde{\mathbf{F}}_{r} = \mathbf{F}_{r} + \mathbf{A}^{T}
+\mathbf{F}_{s} \quad\quad\quad r=1...p, s=p...n
 \end{equation}
 
 The formulation of the generalized inertia forces is more complicated.
@@ -755,12 +742,12 @@ $A$ as:
 the inertial force $R^*$ for that particle can be written as:
 \begin{align}
 %\begin{subequations}
-\underline{R}^* &= -^A\frac{d}{dt}(m ^A\underline{v}^P) \\
-&= -m ^A\frac{d}{dt}^A\underline{v}^P - \dot{m} ^A\underline{v}^P \\
-&= -\dot{m} ^A\underline{v}^P - m ^A \frac{d}{dt}\left(\sum_{i=1}^{n}{} ^A
+\underline{R}^* &= -\frac{^{A} d}{dt}(m ^A\underline{v}^P) \\
+&= -m \frac{^{A}d}{dt}^A\underline{v}^P - \dot{m} ^A\underline{v}^P \\
+&= -\dot{m} ^A\underline{v}^P - m \frac{^{A}d}{dt}\left(\sum_{i=1}^{n}{} ^A
 \underline{v}^P_i u_i \right) \\
-&= -\dot{m} ^A\underline{v}^P - m ^A \sum_{i=1}^{n} \left( ^A\underline{v}_i^P
-\frac{d}{dt}u_i + u_i ^A\frac{d}{dt} ^A\underline{v}^P_i \right) \\
+&= -\dot{m} ^A\underline{v}^P - m \sum_{i=1}^{n} \left( ^A\underline{v}_i^P
+\frac{d}{dt}u_i + u_i \frac{^{A}d}{dt} ^A\underline{v}^P_i \right) \\
 %\end{subequations}
 \end{align}
 We can then write:
@@ -769,8 +756,8 @@ We can then write:
 \mathbf{F^*}_r &= - \left[
                    ^A\underline{v}^P_r \dot{m} ^A\underline{v}^P +
                    ^A\underline{v}^P_r m \sum_{i=1}^{n} \left(
-                   \dot(u)_i ^A\underline{v}^P_i + u_i
-                   ^A\frac{d}{dt}^A\underline{v}^P_i
+                   \dot{u}_i ^A\underline{v}^P_i + u_i
+                   \frac{^{A}d}{dt}^A\underline{v}^P_i
                    \right)
                    \right]
 \end{align}
@@ -823,12 +810,12 @@ generalized speeds are used to form the partial velocities: independent or
 auxiliary?
 The relationship between the auxiliary speeds and constrained speeds is found
 the same way as the relationship between the independent speeds and constrained
-speeds - the matrix $A_{rs}$ that is found relates auxiliary and constrained
+speeds - the matrix $A$ that is found relates auxiliary and constrained
 speeds.
 Furthermore, the transformation from unconstrained auxiliary equations to the
-constrained auxiliary equations ($\mathbf{F} + mathbf{F}^*=0$ to
+constrained auxiliary equations ($\mathbf{F} + \mathbf{F}^*=0$ to
 $\tilde{\mathbf{F}} + \tilde{\mathbf{F}}^* = 0$ is performed exactly the same
-way, just using the matrix $A_{rs}$ that relateds the auxiliary and constrained
+way, just using the matrix $A$ that relateds the auxiliary and constrained
 speeds.
 The entire process is invisible from the user's perspective.
 
