@@ -57,18 +57,18 @@
 \papernum{IDETC/CIE 2013-13470}
 
 %%% You need to remove 'DRAFT: ' in the title for the final submitted version.
-\title{DRAFT: Constrained Multibody Dynamics with Python: From Symbolic
+\title{DRAFT: Constrained Multibody Dynamics With Python: From Symbolic
 Equation Generation to Publication}
 
 %%% first author
 \author{Gilbet Gede\thanks{Address all correspondence to this author}, Dale L.
-Peterson, Angadh S. Nanjangud, Jason K. Moore, Mont Hubbard
+Peterson, Angadh S. Nanjangud, Jason K. Moore
   \affiliation{
     Sports Biomechanics Laboratory\\
     Department of Mechanical and Aerospace Engineering\\
     University of California\\
     Davis, California 95616\\
-    Email: \{ggede, dlpeterson, asnanjangud, jkmoor, mhubbard\}@ucdavis.edu
+    Email: \{ggede, dlpeterson, asnanjangud, jkmoor\}@ucdavis.edu
   }
 }
 
@@ -93,7 +93,7 @@ in Python) with functionality for derivation of symbolic EOMs for constrained
 multibody systems with many degrees of freedom.
 % Object of the document
 We present the design and implementation of the software, and cover basic use
-and workflow for solving and analyzing problems.  The intended audience is the
+and workflow for solving and analyzing problems. The intended audience is the
 academic research community, graduate and advanced undergraduate students, and
 those in industry analyzing multibody systems.
 % Findings
@@ -120,7 +120,7 @@ such as the mass-spring-damper, double pendulum, rolling disc, rattleback, and
 tippy-top. The benefits of symbolic equations of motion are not limited to
 these basic problems though. Certain larger, more complicated multibody systems
 can also be studied more effectively when the equations of motion are available
-symbolically. Advanced simplification routines can help reduced the equations
+symbolically. Advanced simplification routines can help reduce the equations
 to a human readable form and even if the final equations of motion are too
 lengthy for human consumption, the symbolic nature of the intermediate steps to
 get to the equation of motion are generally short enough that symbolic checks
@@ -169,7 +169,7 @@ included several other unique requirements:
 \begin{enumerate}
   \item The software should be open source with a liberal license, encourage
   meritocracy based collaborative development, and ensure continued project
-  development is not limited to or controlled by one any individual or company
+  development is not limited to or controlled by any one individual or company
   and allow easy integration and use by other projects.
 
   \item The software should be written in a popular high level programming
@@ -185,12 +185,12 @@ included several other unique requirements:
   computing platforms and languages (i.e., modelica, C/C++/Fortan, MATLAB).
 \end{enumerate}
 To meet these criteria, we selected Python as the programming language to
-implement our software.  Python is interactive, high level, easy to learn,
+implement our software. Python is interactive, high level, easy to learn,
 widely available, widely used (it is one of the top four languages supported at
-Google), cross platform, open source, and has a large scientific user base .
-Our software is distributed as a sub-package of SymPy \cite{sympy2012}, which
+Google), cross platform, open source, and has a large scientific user base.
+Our software is distributed as a sub-package of SymPy \cite{SymPy2012}, which
 is a full featured CAS written in
-Python.  SymPy is is part of the SciPy Stack \cite{scipystack} specification,
+Python. SymPy is is part of the SciPy Stack \cite{SciPy} specification,
 so it is included with all scientific Python distributions including popular
 ones such as Enthought, Sage, Anaconda, and Python(x,y). SymPy is one of the
 more actively developed Python packages with a large number of maintainers,
@@ -899,10 +899,11 @@ been retained in PyDy.
 
 %%Limitations section. Not really certain how to expan too much on it but
 %I guess we can talk about it later today in the lab
+\section*{LIMITATIONS}
 In testing PyDy thus far, we are yet to clearly establish its computational
-limitations. The most complex system studied using PyDy so far is the bicycle
-(cite Luke and Jason here, I guess), the derivation of whose linearized
-equations of motion take approximately two minutes.
+limitations. The most complex system studied using PyDy so far is the bicycle,
+the derivation of whose linearized equations of motion take approximately
+two minutes.
 
 PyDy lacks the capability of setting up a system purely graphically i.e. by
 using graphical objects (like rigid slender rods, rigid cylinders, etc.) to
