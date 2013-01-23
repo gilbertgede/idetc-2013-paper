@@ -667,7 +667,7 @@ the output can be copied and reentered to form the \verb|Vector| again.
 This leaves our \verb|Vector| class as a symbolic object (although, not a
 subclass of the main SymPy \verb|Expr| class) which users will interact with on
 a symbolic/mathematical level; the complex initialization should never have to
-be done by hand, making use of this class easy for people not intimately
+be done by hand, making use of this class is easy for people not intimately
 familiar with Python and SymPy.
 
 In order to allow interactions between vectors defined in different reference
@@ -681,7 +681,7 @@ frames).
 When the orientation matrix between 2 frames is requested, if it has not
 already been defined, the code will search through all possible branches to
 find the other frame, and then multiply all of the orientation matrices in
-order to generate the DCM between the two frames.
+order to generate the direction cosine matrix between the two frames.
 After doing so, it will be saved so in the future searching does not have to
 happen again.
 
@@ -715,7 +715,7 @@ reference frames.
 It has been more reliable to ask the user to find these velocities themselves
 rather than attempting to do it automatically (and frequently incorrectly).
 In order to help with this task, the \verb|Point| class has a number of methods
-using the one point and one point theorems \cite{Kane1985} to make this step
+using the one point and two point theorems \cite{Kane1985} to make this step
 easier.
 
 The \verb|Dyadic| object has a similar construction approach as \verb|Vector|;
@@ -752,7 +752,7 @@ Upon initialization, it takes in a number of properties which describe the
 system: the inertial reference frame; independent and constrained generalized
 coordinates; independent, auxiliary, and constrained (dependent) generalized
 speeds; and configuration, velocity, and (optionally) acceleration constraint
-equations.  At this point, the relationships between the independent and
+equations. At this point, the relationships between the independent and
 constrained speeds are found as in Kane's Method \cite{Kane1985}; this is shown
 in equation (\ref{eq:Ars_forming}), where $f_v(q, u, t)$ is the list of
 constraint equations and $u$ is the list of independent and dependent speeds.
@@ -982,12 +982,12 @@ We also detailed how our software has been validated, why design decisions were
 made, and how its internal architecture functions.
 
 \section*{ACKNOWLEDGEMENTS}
-Three Google Summer of Code grants (2009, 2011, 2012) most of the software
-development. This material is also partially based upon work supported by the
-National Science Foundation under Grant No. 0928339. Any opinions, findings,
-and conclusions or recommendations expressed in this material are those of the
-author(s) and do not necessarily reflect the views of the National Science
-Foundation.
+Three Google Summer of Code grants (2009, 2011, 2012) supported most of the
+software development. This material is also partially based upon work supported
+by the National Science Foundation under Grant No. 0928339. Any opinions,
+findings, and conclusions or recommendations expressed in this material are
+those of the author(s) and do not necessarily reflect the views of the National
+Science Foundation.
 \bibliographystyle{asmems4}
 \bibliography{asme2e}
 \end{document}
