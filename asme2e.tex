@@ -74,7 +74,7 @@
 %  cleanfoot - take out copyright info in footer leave page number
 %  cleanhead - take out the conference banner on the title page
 %  titlepage/notitlepage - put in titlepage or leave out titlepage
-%  
+%
 %% The default is oneside, onecolumn, 10pt, final
 
 %%% Replace here with information related to your conference
@@ -119,7 +119,7 @@ Peterson, Angadh S. Nanjangud, Jason K. Moore, Mont Hubbard
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 % Context
-Symbolic equations of motion (EOM) for multibody systems are desirable for
+{\it Symbolic equations of motion (EOM) for multibody systems are desirable for
 simulation, stability analyses, control system design, and parameter studies.
 % Need  (what we have and what we want)
 Despite this, the majority of engineering software designed to analyze
@@ -144,23 +144,23 @@ plotting, animation, and online notebooks designed for sharing results.
 % Conclusion
 This software fills a unique role in dynamics, and is attractive to academics
 and industry alike because of its BSD open source license which permits the
-code to be used or included in other software (commercial or open source).
+code to be used or included in other software (commercial or open source).}
 % Perspectives
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{INTRODUCTION}
 There are many dynamic systems which can be better or more effectively studied
-when their EOMs are accessible in a symbolic form. For
-equations that may be visually inspected (i.e., of reasonable length),
-symbolics are generally preferable because the interrelations of the variables
-and constants can give clear understanding to the nature of the problem without
-the need for numerical simulation. Many classic problems fit this category,
-such as the mass-spring-damper, double pendulum, rolling disc, rattleback, and
-tippy-top. The benefits of symbolic equations of motion are not limited to
-these basic problems though. Certain larger, more complicated multibody systems
-can also be studied more effectively when the equations of motion are available
-symbolically. Advanced simplification routines can help reduce the equations
+when their EOMs are accessible in a symbolic form. For equations that may be
+visually inspected (i.e., of reasonable length), symbolics are generally
+preferable because the interrelations of the variables and constants can give
+clear understanding to the nature of the problem without the need for numerical
+simulation. Many classic problems fit this category, such as the
+mass-spring-damper, double pendulum, rolling disc, rattleback, and tippy-top.
+The benefits of symbolic equations of motion are not limited to these basic
+problems though. Certain larger, more complicated multibody systems can also be
+studied more effectively when the equations of motion are available
+symbolically. Advanced simplification routines can help reduced the equations
 to a human readable form and even if the final equations of motion are too
 lengthy for human consumption, the symbolic nature of the intermediate steps to
 get to the equation of motion are generally short enough that symbolic checks
@@ -200,17 +200,16 @@ the formulation of the symbolic equations of motion is done in software, the
 equations of motion are immediately available for other computations that make
 use of the equations.
 
-The software presented herein described addresses the limitations of hand
-derivations and allows for the study of complex multibody dynamics problems
-from a symbolic point of view. There already exist software packages which
-similarly meet these limited criteria (e.g. Autolev/MotionGenesis,
-AutoSim/VehicleSim, others). But when developing our software, we also
-included several other unique requirements:
+The software presented herein addresses the limitations of hand derivations and
+allows for the study of complex multibody dynamics problems from a symbolic
+point of view. There already exist software packages which similarly meet these
+limited criteria (e.g. Autolev/MotionGenesis, AutoSim/VehicleSim). But when
+developing our software, we also included several other unique requirements:
 \begin{enumerate}
   \item The software should be open source with a liberal license, encourage
-  meritocracy based collaborative development, and ensure continued project
-  development is not limited to or controlled by any one individual or company
-  and allow easy integration and use by other projects.
+    meritocracy based collaborative development, ensure continued project
+    development is not limited to or controlled by one any individual or
+    company, and allow easy integration and use by other projects.
 
   \item The software should be written in a popular high level programming
   language that balances efficient execution speed with efficient programmer
@@ -224,21 +223,23 @@ included several other unique requirements:
   publication friendly (i.e., \LaTeX) or are compatible with other populer
   computing platforms and languages (i.e., modelica, C/C++/Fortan, MATLAB).
 \end{enumerate}
+
 To meet these criteria, we selected Python as the programming language to
 implement our software. Python is interactive, high level, easy to learn,
 widely available, widely used (it is one of the top four languages supported at
 Google), cross platform, open source, and has a large scientific user base.
-Our software is distributed as a sub-package of SymPy \cite{SymPy2012}, which
-is a full featured CAS written in
-Python. SymPy is is part of the SciPy Stack \cite{SciPy} specification,
-so it is included with all scientific Python distributions including popular
-ones such as Enthought, Sage, Anaconda, and Python(x,y). SymPy is one of the
-more actively developed Python packages with a large number of maintainers,
-with a long future ahead of it. The SymPy development model allows us to
-include whatever functionality we need and allows for other users to view our
-code, suggest additional abilities, and improve upon and add to what we have
-already done, as well as ensure that the our code is constantly tested against
-any changes or updates to the base symbolic functionality offered by SymPy.
+
+Our software is distributed as a sub-package of SymPy \cite{sympy2012}, which
+is a full featured CAS written in Python. SymPy is is part of the SciPy Stack
+\cite{scipystack} specification, so it is included with all scientific Python
+distributions including popular ones such as Enthought, Sage, Anaconda, and
+Python(x,y). SymPy is one of the more actively developed Python packages with a
+large number of maintainers, with a long future ahead of it. The SymPy
+development model allows us to include whatever functionality we need and
+allows for other users to view our code, suggest additional abilities, and
+improve upon and add to what we have already done, as well as ensure that the
+our code is constantly tested against any changes or updates to the base
+symbolic functionality offered by SymPy.
 
 In this paper, we discuss two main topics. 1) The interface to the EoM
 generation sub-package sympy.physics.mechanics. 2) The workflow for analyzing
@@ -255,18 +256,19 @@ We demonstrate the value of PyDy through the derivation of the $N$-pendulum
 system shown in Figure (\ref{fig:n_pendulum}).  The system is defined by $N$
 massless links of length $l_i$ with particles of mass $m_i$ fixed at one end.
 We selected this problem because it illustrates the power and utility of having
-EoM generation code available within a full-featured programming language.  The
+EoM generation code available within a full-featured programming language. The
 angular velocity of each and every link must be found, as well as the velocity
-of each mass center.  The velocity of $i$-th mass center is
+of each mass center. The velocity of $i$-th mass center is
 \begin{align*}
-%\omega_i &= u_i \cdot a_z\\
-\underline{v}_i &= \underline{v}_{i-1} + \underline{\omega}_i \times
-\underline{r}^i \qquad (i = 1,\dots,N)
+  %\omega_i &= u_i \cdot a_z\\
+  \underline{v}_i &= \underline{v}_{i-1} + \underline{\omega}_i \times
+  \underline{r}^i \qquad (i = 1,\dots,N)
 \end{align*}
+
 This nesting of velocities is best addressed with a classic for loop, something
 that is ideally suited for a computer (loop unrolling is difficult by hand when
-there are many steps and $N$ is large).  The 37 lines of source code required
-to derive the dynamic equations of motion for the $N$ pendulum, where $N$ is
+there are many steps and $N$ is large). The 37 lines of source code required to
+derive the dynamic equations of motion for the $N$ pendulum, where $N$ is
 arbitrary, is shown in (\ref{fig:n_pendulum_source}).
 
 The script first imports necessary functions and classes, then declares a
@@ -275,11 +277,11 @@ generalized speeds, constant parameters, reference frames, points and
 particles. A few empty lists are created before the for loop is entered; these
 lists are sequentially populated as the for loop procedes.  When the final
 iteration of the for loop is complete, the kinematics and all active forces of
-the problem have been completely specified.  The last two lines of the script
+the problem have been completely specified. The last two lines of the script
 take this specification of kinematics and dynamics and generate Kane's
-dynamical equations of motion ($F_r + F_r^* = 0$) in symbolic form.  At this
+dynamical equations of motion ($F_r + F_r^* = 0$) in symbolic form. At this
 point, these equations may be manipulated as fully symbolic variables for a
-variety of purposes.  For example, the command \verb|mlatex(frstar)| generates
+variety of purposes. For example, the command \verb|mlatex(frstar)| generates
 \LaTeX code for the generalized active force $F_r$ which renders as
 \begin{equation}
 \left[\begin{smallmatrix}g l_{0} m_{0} \operatorname{sin}\left(q_{0}\right) + g l_{0} m_{1} \operatorname{sin}\left(q_{0}\right) + g l_{0} m_{2} \operatorname{sin}\left(q_{0}\right) + g l_{0} m_{3} \operatorname{sin}\left(q_{0}\right)\\g l_{1} m_{1} \operatorname{sin}\left(q_{1}\right) + g l_{1} m_{2} \operatorname{sin}\left(q_{1}\right) + g l_{1} m_{3} \operatorname{sin}\left(q_{1}\right)\\g l_{2} m_{2} \operatorname{sin}\left(q_{2}\right) + g l_{2} m_{3} \operatorname{sin}\left(q_{2}\right)\\g l_{3} m_{3} \operatorname{sin}\left(q_{3}\right)\end{smallmatrix}\right]
@@ -319,19 +321,19 @@ joints subjected to a gravitational field.}
 \label{fig:n_pendulum_source}
 \end{figure*}
 
-There are other options besides \LaTeX output which are useful.  Within a
+There are other options besides \LaTeX output which are useful. Within a
 console, commands to ``pretty print'' symbolic expressions can be performed
 with \verb|mpprint|, which generates the output formatted just like the
 \LaTeX equation above, but within the terminal.
 
 Another part of studying dynamic systems is simulation and visualization of the
-results.  SymPy can only solve relatively simple ODEs internally, so the
+results. SymPy can only solve relatively simple ODEs internally, so the
 equations of motion generated for more complex systems need to be passed to
-other numerical integrators.  Currently, sympy.physics.mechanics can make use
+other numerical integrators. Currently, sympy.physics.mechanics can make use
 of existing SymPy translation functions, but more advanced options to generate
-compiled code are being developed and guided by user demands.  The SymPy
+compiled code are being developed and guided by user demands. The SymPy
 translation function \verb|lambdify| can convert symbolic expressions to a
-function using NumPy code.  The code in \ref{fig:numerical_code} (which follows
+function using NumPy code. The code in \ref{fig:numerical_code} (which follows
 the previously written code) shows this:
 
 \begin{figure*}
@@ -369,15 +371,13 @@ y = odeint(rhs, y0, t, args=(parameter_vals,))               # Actual integratio
 
 NumPy is an integral part of the larger Scientific Python ecosystem, focusing
 primarily on numerical arrays and matrices and operations on these arrays and
-matrices.
-SciPy is another part of this ecosystem that provides quick and simple Python
-wrappers to a large library of scientific FORTRAN code.
-The third necessary component of this ecosystem is matplotlib, a Python
-plotting library for visualization of the large datasets generated by NumPy and
-SciPy code.
+matrices. SciPy is another part of this ecosystem that provides quick and
+simple Python wrappers to a large library of scientific FORTRAN code. The third
+necessary component of this ecosystem is matplotlib, a Python plotting library
+for visualization of the large datasets generated by NumPy and SciPy code.
 Using these three Python packages, we can numerically integrate ODEs and plot
-the results.
-The following code shows this process and figures (x) show the plots generated:
+the results. The following code shows this process and figures (x) show the
+plots generated:
 
 \begin{figure*}
 \begin{Verbatim}[frame=single]
@@ -400,9 +400,8 @@ show()
 \end{Verbatim}
 \end{figure*}
 
-Using other Python packages, such as VisualPython, 3D animations can be
-created.
-Use of human-interface-devices (with a sufficiently fast computer) allows for
+Using other Python packages, such as Mayavi, 3D animations can be created. Use
+of human-interface-devices (with a sufficiently fast computer) allows for
 real-time interaction between a user and a visualized simulation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -412,26 +411,25 @@ vailidity and accuracy of the software rightly comes into question. We have
 addressed these concerns in three ways to ensure that our code does generate
 correct equations of motion for arbitrarily complex systems. Firstly, the code
 is open source and well documented. This allows anyone to review the code and
-check for bugs. Linus's Law ``given enough eyeballs, all bugs
-are shallow'' (cite the Cathedral and the Bazaat) applies, if true.
-Secondly, the code functionality is heavily tested with unit testing.  That is,
-each piece of independent functionality in the code has a test (known
-input/output) in place that guarantees correct functioning of each unit. This
-helps ensure that not only the current code works as expected, but that future
-versions must also pass the tests. Thirdly, we've built in tests for well
-benchmarked problems in mutlibody dynamics. There are many problems, both
-simple and complex that have well known symbolic solutions. We have chosen
-several benchmark problems that include three dimensional, configuration and
-motion constraints, and exposing noncontributing forces. These problems are
-built in to the test suite for the package.
+check for bugs. Linus's Law ``given enough eyeballs, all bugs are shallow''
+\cite{Raymond1999} applies, if true. Secondly, the code functionality is
+heavily tested with unit testing. That is, each piece of independent
+functionality in the code has a test (known input/output) in place that
+guarantees correct functioning of each unit. This helps ensure that not only
+the current code works as expected, but that future versions must also pass the
+tests. Thirdly, we've built in tests for well benchmarked problems in mutlibody
+dynamics. There are many problems, both simple and complex that have well known
+symbolic solutions. We have chosen several benchmark problems that include
+three dimensional, configuration and motion constraints, and exposing
+noncontributing forces. These problems are built in to the test suite for the
+package.
 
 Built in tests which validate the equations of motion that are generated
 include: varying degrees of freedom spring-mass-damper systems, various
 pendulums, multiple rolling disc examples testing auxiliary and dependent
-speeds, and an inverted-pendulum cart.
-These are all compared to results found by hand (checked multiple times).
-The other parts of sympy.physics.mechanics include hundreds of tests on other
-pieces of the overall functionality.
+speeds, and an inverted-pendulum cart. These are all compared to results found
+by hand (checked multiple times). The other parts of sympy.physics.mechanics
+include hundreds of tests on other pieces of the overall functionality.
 
 There are also some external (non-automated) tests which are more advanced.
 Currently, the most complicated test validates the formulation of the equations
@@ -471,7 +469,7 @@ packages in the SciPy stack in the previous demo problem:
   \item SciPy: http://www.scipy.org/
   \item matplotlib: http://matplotlib.org/
 \end{itemize}
-%
+
 Download and installation instructions for various platforms are available on
 their respective web sites. But it is worth noting that these packages are a
 part of most of the widely used scientific Python distributions. Downloading a
@@ -486,7 +484,7 @@ listed below:
   \item Anaconda: http://continuum.io/
   \item Python(x,y): http://www.pythonxy.com
 \end{itemize}
-%
+
 SciPy provides more comprehensive installation instructions than space permits
 here: http://scipy.github.com/install.html.
 
@@ -528,8 +526,8 @@ equations of motion\cite{Kane1985} for multibody systems, and the proprietary
 method in a symbolic fashion.
 
 Kane’s method powers many of the dynamic system software packages available
-\cite{Sayers1990, Enlighten2013} due to its detailed bookkeeping design and
-ease of mapping to computing languages. Kane’s method  has influenced the
+\cite{Sayers1990, Englighten2013} due to its detailed bookkeeping design and
+ease of mapping to programming languages. Kane’s method  has influenced the
 design of \verb|mechanics| a great deal but we structured the software such
 that any equation of motion derivation method could be utilized. This is
 possible because we separated the kinematic code from the equations of motion
@@ -538,7 +536,7 @@ that unique ability.
 
 SymPy's symbolic manipulation library provides the core functionality for the
 mechanics package. The majority of objects that are created when using SymPy
-are expression objects, \verb|Expr|.  Other symbolic objects in SymPy, such as
+are expression objects, \verb|Expr|. Other symbolic objects in SymPy, such as
 symbols, adds and muls, or exponentials are inherit from the \verb|Expr| class.
 The \verb|mechanics| package is dependent on these objects, but not by
 inheritance. \verb|mechanics| is made up of a number of classes and functions
@@ -602,60 +600,21 @@ spread out over several modules which are explained in the following list:
     auxiliary speeds needed to compute non-contributing forces.
   \item[lagrange.py] contains the \verb|LagrangesMethod| class which automates
     the generation of a system's non-linear equations of motion via the methods
-    of Lagrangian mechanics \cite{Crandall1968}. To derive the equations of
+    of Lagrangian mechanics\cite{Crandall1968}. To derive the equations of
     motion of a constrained system using Lagrange's equations, one requires the
     configuration and velocity constraint equations, if any, before proceeding
     to derive a complete set of dynamical equations that describe said system.
-    In sympy.physics.mechanics, the \verb|LagrangesMethod| class requires that
-    a \verb|LagrangesMethod| object is initialized with a Lagrangian and the
+    The \verb|LagrangesMethod| object is initialized with a Lagrangian and the
     desired generalized coordinates and optionally forces acting on the system,
     velocity constraints, and an inertial reference frame. If velocity
     constraints are supplied, Lagrange multipliers are generated to account for
     them and non-conservative forces are appropriately handled if applied they
     affect the system.
-
-    In sympy.physics.mechanics, we assume that 3 basic sets of equations are
-    necessary to completely describe a system and obtain the symbolic equations
-    using \verb|LagrangesMethod|. They are:
-
-    \label{eqn:lag_qd}
-    \begin{align}
-        \mathbf{m_{c}}(q, t) \dot{q} + \mathbf{f_{c}}(q, t) &= 0
-    \end{align}
-
-    \label{eqn:lag_qdd}
-    \begin{align}
-        \mathbf{m_{dc}}(\dot{q}, q, t) \ddot{q} + \mathbf{f_{dc}}(\dot{q}, q,
-            t) &= 0
-    \end{align}
-
-    \label{eqn:lag_eom}
-    \begin{align}
-        \mathbf{m_d}(\dot{q}, q, t) \ddot{q} + \mathbf{\Lambda_c}(q, t)
-            \lambda + \mathbf{f_d}(\dot{q}, q, t) &= 0
-    \end{align}
-
-    where $q$ represents a vector of generalized coordinates, $\dot{q}$ and
-    $\ddot{q}$ are vectors of the first and second time derivatives of the
-    generalized coordinates, $\mathbf{\lambda}$ is a vector of the Lagrange
-    multipliers. $\mathbf{m_c}$, $\mathbf{m_dc}$, $\mathbf{m_d}$ and
-    $\mathbf{\Lambda_c}$ are coefficient matrices.
-    ~\ref{eqn:lag_qd} are the constraint equations, ~\ref{eqn:lag_qdd} is the
-    first derivative of the constraint equations, and ~\ref{eqn:lag_eom} are
-    the dynamical equations using Lagrange's equations. The
-    \verb|LagrangesMethod| class rearranges the equations of motion into the
-    following form:
-    \label{eqn:lag_rearr}
-    \begin{align}
-        \mathbf{M}(q, t) x = \mathbf{f}(q, \dot{q}, t)
-    \end{align}
-    where $\mathbf{M}$ is the 'mass matrix', and $x$ is a vector of the states,
-    namely the $\ddot{q}$'s and $\lambda$'s, if any.
-
 \end{description}
 
 %%%%%%%%%%%% JASON ABOVE HERE %%%%%%%%%%%%
 %%%%%%%%%%%% GILBERT BELOW HERE %%%%%%%%%%
+\subsection*{ESSENTIAL}
 As previously shown, the submodule essential.py (which is the core of
 sympy.physics.mechanics) is made of \verb|ReferenceFrame|, \verb|Vector|,
 \verb|Dyadic|, and \verb|dynamicsymbols| (as well as some output functions).
@@ -786,6 +745,7 @@ These objects (as described above) store the minimum amount of information for
 a body that is needed to create the equations of motion; otherwise, these
 classes are simple and unremarkable.
 
+\subsection*{KanesMethod Class}
 Here we will go over some of the fundamentals of the KanesMethod object; the
 detailed call-signatures of this object can be found in the documentation.
 Upon initialization, it takes in a number of properties which describe the
@@ -948,7 +908,46 @@ This gives us enough information to solve for the time derivatives of the
 generalized speeds.
 %%%%%%%%%%%% GILBERT ABOVE HERE %%%%%%%%%%
 %%%%%%%%%%%% ANGADH BELOW HERE %%%%%%%%%%%
+\subsection*{LangrangesMethod Class}
+In sympy.physics.mechanics, we assume that 3 basic sets of equations are
+necessary to completely describe a system and obtain the symbolic equations
+using \verb|LagrangesMethod|. They are:
 
+\label{eqn:lag_qd}
+\begin{align}
+    \mathbf{m_{c}}(q, t) \dot{q} + \mathbf{f_{c}}(q, t) &= 0
+\end{align}
+
+\label{eqn:lag_qdd}
+\begin{align}
+    \mathbf{m_{dc}}(\dot{q}, q, t) \ddot{q} + \mathbf{f_{dc}}(\dot{q}, q,
+        t) &= 0
+\end{align}
+
+\label{eqn:lag_eom}
+\begin{align}
+    \mathbf{m_d}(\dot{q}, q, t) \ddot{q} + \mathbf{\Lambda_c}(q, t)
+        \lambda + \mathbf{f_d}(\dot{q}, q, t) &= 0
+\end{align}
+
+where $q$ represents a vector of generalized coordinates, $\dot{q}$ and
+$\ddot{q}$ are vectors of the first and second time derivatives of the
+generalized coordinates, $\mathbf{\lambda}$ is a vector of the Lagrange
+multipliers. $\mathbf{m_c}$, $\mathbf{m_dc}$, $\mathbf{m_d}$ and
+$\mathbf{\Lambda_c}$ are coefficient matrices.
+~\ref{eqn:lag_qd} are the constraint equations, ~\ref{eqn:lag_qdd} is the
+first derivative of the constraint equations, and ~\ref{eqn:lag_eom} are
+the dynamical equations using Lagrange's equations. The
+\verb|LagrangesMethod| class rearranges the equations of motion into the
+following form:
+\label{eqn:lag_rearr}
+\begin{align}
+    \mathbf{M}(q, t) x = \mathbf{f}(q, \dot{q}, t)
+\end{align}
+where $mathbf{M}$ is the 'mass matrix', and $x$ is a vector of the states,
+namely the $\ddot{q}$'s and $\lambda$'s, if any.
+
+\subsection*{ADDITIONAL FEATURES}
 Dynamicists have varied tastes when it comes to naming conventions of
 orthonormal basis vectors. For example, while some may define $a_i
 \quad (i=x,y,z)$ as the basis vectors for a reference frame $A$, others may
