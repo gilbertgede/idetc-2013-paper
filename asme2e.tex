@@ -78,13 +78,40 @@ Peterson, Jason K. Moore, Angadh S. Nanjangud, Mont Hubbard
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
-Abstract goes here.
+% Context
+Symbolic equations of motion (EOM) for multibody systems are desirable for
+simulation, stability analyses, control system design, and parameter studies.
+% Need  (what we have and what we want)
+Despite this, the majority of engineering software designed to analyze
+multibody systems are numeric in nature (or present a purely numeric user
+interface). To our knowledge, none of the existing software packages are 1) fully
+symbolic and 2) open source and 3) implemented in a popular general purpose
+high level programming language.
+% Task
+In response, we extended SymPy (an existing computer algebra system implemented
+in Python) with functionality for derivation of symbolic EOMs for constrained
+multibody systems with many degrees of freedom.
+% Object of the document
+We present the design and implementation of the software, and cover basic use
+and workflow for solving and analyzing problems.  The intended audience is the
+academic research community, graduate and advanced undergraduate students, and
+those in industry analyzing multibody systems.
+% Findings
+We demonstrate the software by deriving EOMs of a N link pendulum, show its
+capabilities for \LaTeX output, and how it integrates with other Python
+scientific libraries, allowing for numerical simulation, publication quality
+plotting, animation, and online notebooks designed for sharing results.
+% Conclusion
+This software fills a unique role in dynamics, and is attractive to academics
+and industry alike because of its BSD open source license which permits the
+code to be used or included in other software (commercial or open source).
+% Perspectives
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{INTRODUCTION}
 There are many dynamic systems which can be better or more effectively studied
-when their equations of motion (EoM) are accessible in a symbolic form. For
+when their EOMs are accessible in a symbolic form. For
 equations that may be visually inspected (i.e., of reasonable length),
 symbolics are generally preferable because the interrelations of the variables
 and constants can give clear understanding to the nature of the problem without
