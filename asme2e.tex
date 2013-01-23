@@ -22,9 +22,49 @@
 \usepackage{fancyvrb}
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{pgf}
+\usetikzlibrary{arrows}
+\usetikzlibrary{snakes}
 \renewcommand{\b}[1]{\mathbf{#1}}
 \newcommand{\bs}[1]{\boldsymbol{#1} }
 \newcommand{\uv}[1]{\hat{\mathbf{#1}}}
+\newcommand{\drawpendulum}[6]{
+  \def \x {#1}
+  \def \y {#2}
+  \def \theta {#3}
+  \def \length {#4}
+  \def \m {#5}
+  \def \index {#6}
+  % Shift the origin to x, y
+  \pgftransformshift{\pgfpoint{\x}{\y}}
+  % Draw a dashed line from origin to -l
+  \draw[dashed] (0,0)--(0,-\length);
+  % Draw an arc from (0,-.75*l) that is theta degrees clockwise
+  \draw[->] (0,-0.75*\length) arc (-90:\theta-90:0.75*\length);
+  % Rotate to middle of arc and label it
+  \pgftransformrotate{\theta/2}
+  \node at (0,-0.90*\length) {$q_{\scriptscriptstyle\index}$};
+  % Rotate to end of arc
+  \pgftransformrotate{\theta/2}
+  % Draw the link
+  \draw [thick] (0,0)--(0,-\length);
+  % Label the link
+  \draw[snake=brace] (\m+1mm,0)--(\m+1mm,-\length);
+  \node at (\m+6mm,-0.5*\length) {$l_{\scriptscriptstyle\index}$};
+  % Draw the mass
+  \shade[ball color=black] (0,-\length) circle (\m);
+  % Label the mass
+  \pgftransformshift{\pgfpoint{0}{-\length}}
+  \pgftransformrotate{-\theta}
+  \node at (-\m/2-2mm, -\m/2-2mm) {$m_{\scriptscriptstyle\index}$};
+  \pgftransformrotate{\theta}
+  \pgftransformshift{\pgfpoint{0}{\length}}
+
+  % Reset the coordinates back to what they were prior to this command
+  \pgftransformrotate{-\theta}
+  \pgftransformshift{\pgfpoint{-\x}{-\y}}
+}
 
 %% The class has several options
 %  onecolumn/twocolumn - format for one or two columns per page
@@ -246,12 +286,31 @@ variety of purposes.  For example, the command \verb|mlatex(frstar)| generates
 \end{equation}
 with no further modification from the user.
 
-\begin{figure*}
-(Luke will make a figure)
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+    \draw [thick] (-2cm,3mm)--(2cm,3mm);
+    \draw [thick, rounded corners=1mm] (-3mm,3mm)--(0,-3mm)--(3mm,3mm);
+    \draw [->,thick] (5mm,0)--(10mm,0);
+    \node at (12mm,0) {$\hat{\mathbf{a}}_y$};
+    \draw [->,thick] (0,-21mm)--(0,-26mm);
+    \node at (0,-28mm) {$\hat{\mathbf{a}}_x$};
+    \draw [->,thick] (-10mm,-60mm)--(-10mm,-70mm);
+    \node at (-10mm,-72mm) {$g$};
+   %\drawpendulum{  x}{  y}{ deg}{  l}{  m}{i}
+    \drawpendulum{0cm}{0cm}{22.5}{2cm}{1mm}{0}
+    \drawpendulum{0.76536686cm}{-1.847759cm}{45}{3cm}{3mm}{1}
+    \node at (3cm,-5cm) {$\vdots$};
+    \node at (3cm,-5.5cm) {$\vdots$};
+    \drawpendulum{3.5cm}{-6cm}{22.5}{4cm}{2mm}{N-1}
+    \foreach \x in {-2cm,-1.5cm,-1.0cm,-0.5cm,0cm,0.5cm,1.0cm,1.5cm,2cm}
+      \draw[thick] (\x,3mm)--(\x-1mm,5mm);
+\end{tikzpicture}
+\end{center}
 \caption{N-pendulum system, a sequence of massive links connected by revolute
 joints subjected to a gravitational field.}
 \label{fig:n_pendulum}
-\end{figure*}
+\end{figure}
 
 \begin{figure*}
 \fvset{frame=single}
