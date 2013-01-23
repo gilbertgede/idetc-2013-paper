@@ -22,7 +22,9 @@
 \usepackage{fancyvrb}
 \usepackage{graphicx}
 \usepackage{amsmath}
-
+\renewcommand{\b}[1]{\mathbf{#1}}
+\newcommand{\bs}[1]{\boldsymbol{#1} }
+\newcommand{\uv}[1]{\hat{\mathbf{#1}}}
 
 %% The class has several options
 %  onecolumn/twocolumn - format for one or two columns per page
@@ -76,13 +78,40 @@ Peterson, Angadh S. Nanjangud, Jason K. Moore, Mont Hubbard
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
-Abstract goes here.
+% Context
+Symbolic equations of motion (EOM) for multibody systems are desirable for
+simulation, stability analyses, control system design, and parameter studies.
+% Need  (what we have and what we want)
+Despite this, the majority of engineering software designed to analyze
+multibody systems are numeric in nature (or present a purely numeric user
+interface). To our knowledge, none of the existing software packages are 1) fully
+symbolic and 2) open source and 3) implemented in a popular general purpose
+high level programming language.
+% Task
+In response, we extended SymPy (an existing computer algebra system implemented
+in Python) with functionality for derivation of symbolic EOMs for constrained
+multibody systems with many degrees of freedom.
+% Object of the document
+We present the design and implementation of the software, and cover basic use
+and workflow for solving and analyzing problems.  The intended audience is the
+academic research community, graduate and advanced undergraduate students, and
+those in industry analyzing multibody systems.
+% Findings
+We demonstrate the software by deriving EOMs of a N link pendulum, show its
+capabilities for \LaTeX output, and how it integrates with other Python
+scientific libraries, allowing for numerical simulation, publication quality
+plotting, animation, and online notebooks designed for sharing results.
+% Conclusion
+This software fills a unique role in dynamics, and is attractive to academics
+and industry alike because of its BSD open source license which permits the
+code to be used or included in other software (commercial or open source).
+% Perspectives
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{INTRODUCTION}
 There are many dynamic systems which can be better or more effectively studied
-when their equations of motion (EoM) are accessible in a symbolic form. For
+when their EOMs are accessible in a symbolic form. For
 equations that may be visually inspected (i.e., of reasonable length),
 symbolics are generally preferable because the interrelations of the variables
 and constants can give clear understanding to the nature of the problem without
@@ -183,43 +212,58 @@ features, internal constructions within our software, and verification with
 benchmark examples.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{DEMONSTRATION PROBLEM}
-To demonstrate the value of PyDy, we have chosen a test problem which
-demonstrates its strengths.
-The problem is shown in figure (X).
-It is a N-pendulum system - a series of N masses each connected by masses links
-subjected to a gravitational field.
+We demonstrate the value of PyDy through the derivation of the $N$-pendulum
+system shown in Figure (\ref{fig:n_pendulum}).  The system is defined by $N$
+massless links of length $l_i$ with particles of mass $m_i$ fixed at one end.
+We selected this problem because it illustrates the power and utility of having
+EoM generation code available within a full-featured programming language.  The
+angular velocity of each and every link must be found, as well as the velocity
+of each mass center.  The velocity of $i$-th mass center is
+\begin{align*}
+%\omega_i &= u_i \cdot a_z\\
+v_i &= v_{i-1} + \omega_i \times r^i \qquad (i = 1,\dots,N)
+\end{align*}
+This nesting of velocities is best addressed with a classic for loop, something
+that is ideally suited for a computer (loop unrolling is difficult by hand when
+there are many steps and $N$ is large).  The 37 lines of source code required
+to derive the dynamic equations of motion for the $N$ pendulum, where $N$ is
+arbitrary, is shown in (\ref{fig:n_pendulum_source}).
 
-(Make a figure)
+The script first imports necessary functions and classes, then declares a
+number of symbolic variables that represent generalized coordinates,
+generalized speeds, constant parameters, reference frames, points and
+particles. A few empty lists are created before the for loop is entered; these
+lists are sequentially populated as the for loop procedes.  When the final
+iteration of the for loop is complete, the kinematics and all active forces of
+the problem have been completely specified.  The last two lines of the script
+take this specification of kinematics and dynamics and generate Kane's
+dynamical equations of motion ($F_r + F_r^* = 0$) in symbolic form.  At this
+point, these equations may be manipulated as fully symbolic variables for a
+variety of purposes.  For example, the command \verb|mlatex(frstar)| generates
+\LaTeX code for the generalized active force $F_r$ which renders as
+\begin{equation}
+\left[\begin{smallmatrix}g l_{0} m_{0} \operatorname{sin}\left(q_{0}\right) + g l_{0} m_{1} \operatorname{sin}\left(q_{0}\right) + g l_{0} m_{2} \operatorname{sin}\left(q_{0}\right) + g l_{0} m_{3} \operatorname{sin}\left(q_{0}\right)\\g l_{1} m_{1} \operatorname{sin}\left(q_{1}\right) + g l_{1} m_{2} \operatorname{sin}\left(q_{1}\right) + g l_{1} m_{3} \operatorname{sin}\left(q_{1}\right)\\g l_{2} m_{2} \operatorname{sin}\left(q_{2}\right) + g l_{2} m_{3} \operatorname{sin}\left(q_{2}\right)\\g l_{3} m_{3} \operatorname{sin}\left(q_{3}\right)\end{smallmatrix}\right]
+\end{equation}
+with no further modification from the user.
 
-We picked this problem because it is non-trivial, demonstrates the benefits of
-having the EoM generation code being written in a full-featured programming
-language, and can be written concisely.
-When writing the problem by hand, the angular velocity of each and every link
-needs to be found, as well as the velocity of each connection.
-As the velocity of each connecting point is built off the previous links
-connecting point, each additional link has an increasingly large velocity (in
-terms of expression size) associated with it.
-This is briefly shown in equations (x through x).
-(write equation for ang vel and vel, for a few connected links)
-
-When using our software to generate the EoM, the user needs to set the angular
-velocity of each link’s reference frame relative to another reference frame,
-they need to use a function to find the velocity of each point as a function of
-the previous points velocity, list the gravitational forces for each body, and
-then supply the problem to the object which generates the EoM.
-This certainly sounds complicated, but the code below shows what it actually
-looks like.
+\begin{figure*}
+(Luke will make a figure)
+\caption{N-pendulum system, a sequence of massive links connected by revolute
+joints subjected to a gravitational field.}
+\label{fig:n_pendulum}
+\end{figure*}
 
 \begin{figure*}
 \fvset{frame=single}
-\VerbatimInput{n_pends.py}
+\VerbatimInput{n_pends_minimal.py}
+\caption{User Python script to derive equations of motion for N-pendulum}
+\label{fig:n_pendulum_source}
 \end{figure*}
 
-The equations of motion have now been generated.
-In order to do anything useful though, we need to output and examine them.
-Within a console, there are commands to display the quantities generated, such
-as \begin{verbatim} mpprint \end{verbatim}, which generates the output below, showing the mass matrix of this
-problem with $N=2$:
+There are other options besides \LaTeX output which are useful.  Within a
+console, commands to ``pretty print'' symbolic expressions can be performed
+with \verb|mpprint()|, which generates the output below, showing the mass
+matrix of the $N$-pendulum for $N=2$:
 
 %\begin{figure*}
 %\includegraphics[natwidth=470bp, natheight=93bp, width=3in]{mpprint_out.svg}
@@ -227,32 +271,15 @@ problem with $N=2$:
 %\end{figure*}
 mpprint graphic
 
-There is also LaTeX output functionality, which generates a string that can be
-directly copied/pasted into publications to generate LaTeX math equations (the
-same mass matrix is shown):
-
-\begin{equation}
-\left[\begin{smallmatrix}l_{0}^{2} m_{0} + l_{0}^{2} m_{1} & l_{0} l_{1} m_{1}
-\left(\operatorname{sin}\left(q_{0}\right) \operatorname{sin}\left(q_{1}\right)
-+ \operatorname{cos}\left(q_{0}\right)
-\operatorname{cos}\left(q_{1}\right)\right)\\l_{0} l_{1} m_{1}
-\left(\operatorname{sin}\left(q_{0}\right) \operatorname{sin}\left(q_{1}\right)
-+ \operatorname{cos}\left(q_{0}\right)
-\operatorname{cos}\left(q_{1}\right)\right) & l_{1}^{2}
-m_{1}\end{smallmatrix}\right]
-\end{equation}
-
 Another part of studying dynamic systems is simulation and visualization of the
-results.
-SymPy can only solve relatively simple ODEs internally, so the equations of
-motion generated for more complex systems need to be passed to other numerical
-integrators.
-Currently, sympy.physics.mechanics can make use of existing SymPy translation
-functions, but more advanced options to generate compiled code are being
-developed and guided by user demands.
-The SymPy translation function [lambdify] can convert symbolic expressions to a
-function using NumPy code.
-The code below (which follows the previously written code) shows this:
+results.  SymPy can only solve relatively simple ODEs internally, so the
+equations of motion generated for more complex systems need to be passed to
+other numerical integrators.  Currently, sympy.physics.mechanics can make use
+of existing SymPy translation functions, but more advanced options to generate
+compiled code are being developed and guided by user demands.  The SymPy
+translation function [lambdify] can convert symbolic expressions to a function
+using NumPy code.  The code below (which follows the previously written code)
+shows this:
 
 \begin{figure*}
 \begin{Verbatim}[frame=single]
