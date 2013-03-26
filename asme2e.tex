@@ -24,6 +24,7 @@
 \usepackage{amsmath}
 \usepackage{tikz}
 \usepackage{pgf}
+\usepackage{cite}
 \usetikzlibrary{arrows}
 \usetikzlibrary{snakes}
 \renewcommand{\b}[1]{\mathbf{#1}}
@@ -101,7 +102,7 @@
 Equation Generation to Publication}
 
 %%% first author
-\author{Gilbet Gede\thanks{Address all correspondence to this author}, Dale L.
+\author{Gilbert Gede\thanks{Address all correspondence to this author}, Dale L.
 Peterson, Angadh S. Nanjangud, Jason K. Moore, Mont Hubbard
   \affiliation{
     Sports Biomechanics Laboratory\\
@@ -160,7 +161,7 @@ mass-spring-damper, double pendulum, rolling disc, rattleback, and tippy-top.
 The benefits of symbolic equations of motion are not limited to these basic
 problems though. Certain larger, more complicated multibody systems can also be
 studied more effectively when the equations of motion are available
-symbolically. Advanced simplification routines can help reduced the equations
+symbolically. Advanced simplification routines can help reduce the equations
 to a human readable form and even if the final equations of motion are too
 lengthy for human consumption, the symbolic nature of the intermediate steps to
 get to the equation of motion are generally short enough that symbolic checks
@@ -231,7 +232,7 @@ Google), cross platform, open source, and has a large scientific user base.
 
 Our software is distributed as a sub-package of SymPy \cite{sympy2012}, which
 is a full featured CAS written in Python. SymPy is is part of the SciPy Stack
-\cite{scipystack} specification, so it is included with all scientific Python
+\cite{SciPyStackGithub} specification, so it is included with all scientific Python
 distributions including popular ones such as Enthought, Sage, Anaconda, and
 Python(x,y). SymPy is one of the more actively developed Python packages with a
 large number of maintainers, with a long future ahead of it. The SymPy
@@ -333,8 +334,8 @@ other numerical integrators. Currently, sympy.physics.mechanics can make use
 of existing SymPy translation functions, but more advanced options to generate
 compiled code are being developed and guided by user demands. The SymPy
 translation function \verb|lambdify| can convert symbolic expressions to a
-function using NumPy code. The code in \ref{fig:numerical_code} (which follows
-the previously written code) shows this:
+function using NumPy code. The code in figure \ref{fig:numerical_code} (which follows
+the previously written code) shows this.
 
 \begin{figure*}
 \begin{Verbatim}[frame=single]
@@ -512,7 +513,7 @@ equations of motion\cite{Kane1985} for multibody systems, and the proprietary
 method in a symbolic fashion.
 
 Kane’s method powers many of the dynamic system software packages available
-\cite{Sayers1990, Englighten2013} due to its detailed bookkeeping design and
+\cite{Sayers1990, Enlighten2013} due to its detailed bookkeeping design and
 ease of mapping to programming languages. Kane’s method  has influenced the
 design of \verb|mechanics| a great deal but we structured the software such
 that any equation of motion derivation method could be utilized. This is
@@ -523,8 +524,8 @@ that unique ability.
 SymPy's symbolic manipulation library provides the core functionality for the
 mechanics package. The majority of objects that are created when using SymPy
 are expression objects, \verb|Expr|. Other symbolic objects in SymPy, such as
-symbols, adds and muls, or exponentials are inherit from the \verb|Expr| class.
-The \verb|mechanics| package is dependent on these objects, but not by
+symbols, adds and muls, or exponentials are inherited from the \verb|Expr|
+class. The \verb|mechanics| package is dependent on these objects, but not by
 inheritance. \verb|mechanics| is made up of a number of classes and functions
 spread out over several modules which are explained in the following list:
 %
@@ -708,7 +709,7 @@ The \verb|Dyadic| object has a similar construction approach as \verb|Vector|;
 it is made up of a list of components.
 However, for a dyadic, there are 3 parts of each list entry: a measure number,
 the first basis vector, and the second basis vector.
-The lists generated look like:
+The lists which compose a \verb|Dyadic| object look like:
 \begin{verbatim}
 [(J, A.x, A.x), (I, A.x, B.y)]
 \end{verbatim}
@@ -728,8 +729,7 @@ There are two included methods for generating EoM: Kane's and Lagrange's.
 Both of these objects require the system's definition to be passed in using the
 container classes \verb|Particle| and \verb|RigidBody|.
 These objects (as described above) store the minimum amount of information for
-a body that is needed to create the equations of motion; otherwise, these
-classes are simple and unremarkable.
+a body that is needed to create the equations of motion.
 
 \subsection*{KanesMethod Class}
 Here we will go over some of the fundamentals of the KanesMethod object; the
