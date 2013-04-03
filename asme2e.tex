@@ -894,9 +894,12 @@ necessary to completely describe a system and obtain the symbolic equations
 using \verb|LagrangesMethod|. They are:
 
 \begin{align}
+    \label{eqn:lag_qd}
     0 &= \mathbf{m_{c}}(q, t) \dot{q} + \mathbf{f_{c}}(q, t)\\
+    \label{eqn:lag_qdd}
     0 &= \mathbf{m_{dc}}(\dot{q}, q, t) \ddot{q} + \mathbf{f_{dc}}(\dot{q}, q,
         t)\\
+    \label{eqn:lag_eom}
     0 &= \mathbf{m_d}(\dot{q}, q, t) \ddot{q} + \Lambda_c(q, t)
         \lambda + \mathbf{f_d}(\dot{q}, q, t)
 \end{align}
@@ -906,8 +909,9 @@ $\ddot{q}$ are vectors of the first and second time derivatives of the
 generalized coordinates, $\mathbf{\lambda}$ is a vector of the Lagrange
 multipliers. $\mathbf{m_c}$, $\mathbf{m_dc}$, $\mathbf{m_d}$ and
 $\Lambda_c$ are coefficient matrices.
-~\ref{eqn:lag_qd} are the constraint equations, ~\ref{eqn:lag_qdd} is the
-first derivative of the constraint equations, and ~\ref{eqn:lag_eom} are
+Equation (\ref{eqn:lag_qd}) shows the constraint equations,
+(\ref{eqn:lag_qdd}) shows the
+first derivative of the constraint equations, and (\ref{eqn:lag_eom}) shows
 the dynamical equations using Lagrange's equations. The
 \verb|LagrangesMethod| class rearranges the equations of motion into the
 following form:
@@ -928,16 +932,16 @@ been retained in PyDy.
 
 %%Limitations section. Not really certain how to expan too much on it but
 %I guess we can talk about it later today in the lab
-\section*{LIMITATIONS}
-In testing PyDy thus far, we have yet to clearly establish the computational
-limitations. The most complex system studied using PyDy so far is the bicycle,
-the derivation of whose linearized equations of motion take approximately
-two minutes.
-
-PyDy lacks the capability of setting up a system by using graphical objects
-(like rigid slender rods, rigid cylinders, etc.) to configure a mechanical
-system. Currently, the study of any dynamical system can only be performed by
-writing a script to configure a system and further study it.
+%\section*{LIMITATIONS}
+%In testing PyDy thus far, we have yet to clearly establish the computational
+%limitations. The most complex system studied using PyDy so far is the bicycle,
+%the derivation of whose linearized equations of motion take approximately
+%two minutes.
+%
+%PyDy lacks the capability of setting up a system by using graphical objects
+%(like rigid slender rods, rigid cylinders, etc.) to configure a mechanical
+%system. Currently, the study of any dynamical system can only be performed by
+%writing a script to configure a system and further study it.
 
 %%%%%%%%%%%% ANGADH ABOVE HERE %%%%%%%%%%%
 
