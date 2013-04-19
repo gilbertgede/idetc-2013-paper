@@ -140,7 +140,7 @@ the academic research community, graduate and advanced undergraduate students,
 and those in industry analyzing multibody systems.
 % Findings
 We demonstrate the software by deriving the EOMs of a N-link pendulum, show its
-capabilities for \LaTeX output, and how it integrates with other Python
+capabilities for \LaTeX\ output, and how it integrates with other Python
 scientific libraries - allowing for numerical simulation, publication quality
 plotting, animation, and online notebooks designed for sharing results.
 % Conclusion
@@ -165,12 +165,12 @@ The benefits of symbolic equations of motion are not limited to these basic
 problems though. Larger, more complicated multibody systems can also be studied
 more effectively when the equations of motion are available symbolically.
 Advanced simplification routines can sometimes reduce the length of the
-equations to a human readable size. Even if the final equations of motion are
-too lengthy for human consumption, the symbolic nature of the steps to get to
-the equations of motion are short enough that symbolic checks can be used to
-validate the correctness of the derivation. Problems in biomechanics,
-spacecraft dynamics, and single-track vehicles have all been sucessfully
-studied using symbolic EOMs.
+equations such that they are human readable and the intermediate derivation
+steps are often short enough that symbolic checks can be used to validate the
+correctness. Furthermore, the symbolic form of the EOMs often evaluate much
+faster than their numerical counterparts, which is a significant advantage for
+real time computations. Problems in biomechanics, spacecraft dynamics, and
+single-track vehicles have all been successfully studied using symbolic EOMs.
 
 Having the symbolic equations of motion available permits numerical simulation,
 but also allows for a more mathematical study of the system in question. System
@@ -198,7 +198,7 @@ computer algebra systems (CAS) has reduced the difficulty involved in forming
 the equations of motion, but it has not completely eliminated these problems.
 However, the details of the symbolic algebra, differentiation, and vector
 calculus can be handled by a reliable CAS, eliminating the errors associated
-with those operations - allowing the user to think more about the implications
+with those operations, allowing the user to think more about the implications
 of the dynamic equations.
 
 The software presented herein addresses some of the limitations of hand
@@ -208,28 +208,27 @@ limited criteria (e.g. Autolev/MotionGenesis, AutoSim/VehicleSim). But when
 developing our software, we also included these unique requirements:
 \begin{enumerate}
   \item The software should be open source with a liberal license, encourage
-  collaborative development, ensure continued project development is not
-  limited by or relying on any individual or organization, and allow easy
-  integration and use by other projects.
+    collaborative development, ensure continued project development, not be
+    limited by or rely on any individual or organization, and allow easy
+    integration and use by other projects.
 
   \item The software should be written in a popular high level programming
-  language that balances efficient execution speed with efficient programmer
-  development time, and has a wide selection of scientific libraries (or can
-  conveniently interface with libraries written in other languages).
+    language that balances efficient execution speed with efficient programmer
+    development time, and has a wide selection of scientific libraries (or can
+    conveniently interface with libraries written in other languages).
 
   \item The software should be built on top of an existing full-featured
-  symbolic CAS that is also open source.
+    symbolic CAS that is also open source.
 
   \item The software should easily export the equations in formats that are
-  publication friendly (i.e., \LaTeX) or are compatible with other populer
-  computing platforms and languages (i.e., modelica, C/C++/Fortan, MATLAB).
+    publication friendly (i.e., \LaTeX) or are compatible with other popular
+    computing platforms and languages (i.e., Modelica, C/C++/Fortan, MATLAB).
 \end{enumerate}
 
 To meet these criteria, we selected Python as the programming language to
 implement our software. Python is interactive, high level, easy to learn,
-widely available, widely used (it is one of the top four languages supported at
-Google), cross platform, open source, and has a large scientific user base.
-% TODO cite google factoid.
+widely available, widely used, cross platform, open source, and has a large
+scientific user base.
 
 Our software is distributed as a sub-package of SymPy \cite{sympy2012}, which
 is a full featured CAS written in Python. SymPy is part of the SciPy Stack
@@ -238,7 +237,7 @@ Python distributions including Enthought, Sage, Anaconda, and Python(x,y).
 SymPy is one of the more actively developed Python packages with a large number
 of maintainers, ensuring a long future. The SymPy development model allows new
 functionality to be easily added and allows for other users to view our code,
-suggest additional abilities, and improve upon and add to what we have already
+suggest additional features, and improve upon and add to what we have already
 done, as well as ensure that the our code is constantly tested against any
 changes or updates to the base symbolic functionality offered by SymPy.
 
@@ -255,7 +254,7 @@ constructions within our software, and verification with benchmark examples.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{DEMONSTRATION PROBLEM}
 We now demonstrate the value of PyDy through the derivation of the $N$-pendulum
-system shown in Figure (\ref{fig:n_pendulum}).  The system is defined by $N$
+system shown in Figure \ref{fig:n_pendulum}.  The system is defined by $N$
 massless links of length $l_i$ with particles of mass $m_i$ fixed at one end.
 We selected this problem because it illustrates the power and utility of having
 EoM generation code available within a full-featured programming language. The
@@ -267,11 +266,11 @@ of each particle. The velocity of $i$-th particle is
   \underline{r}^i \qquad (i = 1,\dots,N)
 \end{align*}
 
-This nesting of velocities is best addressed with a loop, something
-that a computer is well suited for (loop unrolling is difficult by hand when
-there are many steps and $N$ is large). The 37 lines of source code required to
-derive the dynamic equations of motion for the $N$ pendulum, where $N$ is
-the number of links, is shown in figure \ref{fig:n_pendulum_source}.
+This nesting of velocities is best addressed with a loop, something that a
+computer is well suited for (loop unrolling is difficult by hand when there are
+many steps and $N$ is large). There are thirty-seven lines of source code
+required to derive the dynamic equations of motion for the $N$ pendulum, where
+$N$ is the number of links, is shown in Figure \ref{fig:n_pendulum_source}.
 
 The script first imports necessary functions and classes, then declares a
 number of symbolic variables that represent generalized coordinates,
@@ -283,7 +282,7 @@ completely specified. The last two lines of the script take this specification
 of kinematics and dynamics and generate Kane's dynamical equations of motion
 ($F_r + F_r^* = 0$) in symbolic form. At this point, these equations may be
 manipulated as fully symbolic variables for a variety of purposes. For example,
-the command \verb|mlatex(fr)| generates \LaTeX code for the generalized active
+the command \verb|mlatex(fr)| generates \LaTeX\ code for the generalized active
 force $F_r$, which renders as:
 \begin{equation}
 \left[\begin{smallmatrix}g l_{0} m_{0} \operatorname{sin}\left(q_{0}\right) + g l_{0} m_{1} \operatorname{sin}\left(q_{0}\right) + g l_{0} m_{2} \operatorname{sin}\left(q_{0}\right) + g l_{0} m_{3} \operatorname{sin}\left(q_{0}\right)\\g l_{1} m_{1} \operatorname{sin}\left(q_{1}\right) + g l_{1} m_{2} \operatorname{sin}\left(q_{1}\right) + g l_{1} m_{3} \operatorname{sin}\left(q_{1}\right)\\g l_{2} m_{2} \operatorname{sin}\left(q_{2}\right) + g l_{2} m_{3} \operatorname{sin}\left(q_{2}\right)\\g l_{3} m_{3} \operatorname{sin}\left(q_{3}\right)\end{smallmatrix}\right]
@@ -323,10 +322,10 @@ joints subjected to a gravitational field.}
 \label{fig:n_pendulum_source}
 \end{figure*}
 
-There are other options besides \LaTeX output which are useful. Within a
+There are other options besides \LaTeX\ output which are useful. Within a
 console, commands to ``pretty print'' symbolic expressions can be performed
 with \verb|mpprint|, which generates the output formatted just like the
-\LaTeX equation above, but within the terminal.
+\LaTeX\ equation above, but within the terminal.
 
 Another part of studying dynamic systems is simulation and visualization of the
 results. SymPy can only analytically solve simple ODEs, so the equations of
@@ -334,9 +333,9 @@ motion generated for more complex systems need to be passed to other numerical
 integrators. Currently, sympy.physics.mechanics can make use of existing SymPy
 translation functions, but more advanced options to generate compiled code are
 being developed and guided by user demands. The SymPy translation function
-\verb|lambdify| can convert symbolic expressions to a function using NumPy
-code. The code in figure \ref{fig:numerical_code} (which is executed after the
-previously written code) shows this.
+\verb|lambdify| can convert symbolic expressions to a NumPy compatible
+function. The code in Figure \ref{fig:numerical_code} (which is executed after
+the previously written code) shows this method.
 
 \begin{figure*}
 \begin{Verbatim}[frame=single]
@@ -346,25 +345,25 @@ from scipy.integrate import odeint
 
 parameters = [g]                                             # Parameter Definitions
 parameter_vals = [9.81]                                      # First we define gravity
-for i in range(N):
+for i in range(n):
     parameters += [l[i], m[i]]                               # Then each mass
-    parameter_vals += [1. / N, 0.01 / N]                     # and length
+    parameter_vals += [1. / n, 0.01 / n]                     # and length
 
 dummy_symbols = [Dummy() for i in q + u]                     # Necessary to translate
 dummy_dict = dict(zip(q + u, dummy_symbols))                 # out of functions of time
-kds = KM.kindiffdict()                                       # Need to eliminate qdots
-MM = KM.mass_matrix_full.subs(kds).subs(dummy_dict)          # Substituting away qdots
-Fo = KM.forcing_full.subs(kds).subs(dummy_dict)              # and in dummy symbols
-mm = lambdify(dummy_symbols + parameters, MM)                # The actual call that gets
-fo = lambdify(dummy_symbols + parameters, Fo)                # us to a NumPy function
+kds = kane.kindiffdict()                                     # Need to eliminate qdots
+mm_sym = kane.mass_matrix_full.subs(kds).subs(dummy_dict)    # Substituting away qdots
+fo_sym = kane.forcing_full.subs(kds).subs(dummy_dict)        # and in dummy symbols
+mm = lambdify(dummy_symbols + parameters, mm_sym)            # The actual call that gets
+fo = lambdify(dummy_symbols + parameters, fo_sym)            # us to a NumPy function
 
 def rhs(y, t, args):                                         # Creating the rhs function
-    into = hstack((y, args))                                 # States and parameters
-    return array(linalg.solve(mm(*into), fo(*into))).T[0]    # Solving for the udots
+    vals = hstack((y, args))                                 # States and parameters
+    sol = linalg.solve(mm_sym(*vals), fo_sym(*vals))         # Solving for the udots
+    return array(sol).T[0]
 
-y0 = hstack((arange(N) * 0.01, arange(N) * 0))               # Initial conditions, q and u
+y0 = hstack((arange(n) * 0.01, arange(n) * 0))               # Initial conditions, q & u
 t = linspace(0, 10, 1000)                                    # Time vector
-
 y = odeint(rhs, y0, t, args=(parameter_vals,))               # Actual integration
 
 \end{Verbatim}
@@ -375,7 +374,7 @@ y = odeint(rhs, y0, t, args=(parameter_vals,))               # Actual integratio
 NumPy is an integral part of the larger Scientific Python ecosystem, focusing
 primarily on numerical arrays and matrices and operations on these arrays and
 matrices. SciPy is another part of this ecosystem that provides quick and
-simple Python wrappers to a large library of scientific FORTRAN code. The third
+simple Python wrappers to a large library of legacy scientific code. The third
 necessary component of this ecosystem is matplotlib, a Python plotting library
 for visualization of the large datasets generated by NumPy and SciPy code.
 Using these three Python packages, we can numerically integrate ODEs and plot
@@ -383,12 +382,12 @@ the results, which are shown in Figure \ref{fig:time_series}.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{four_link_pendulum_time_series}
-  \caption{Time history of generalized cooridinates and speeds for 4 link
-pendulum.}
+  \caption{Time history of generalized coordinates and speeds for a 4 link
+  pendulum.}
   \label{fig:time_series}
 \end{figure}
 
-Using other Python packages, such as Mayavi, 3D animations can be created. Use
+Using other Python packages, such as MayaVi, 3D animations can be created. Use
 of human-interface-devices (with a sufficiently fast computer) allows for
 real-time interaction between a user and a visualized simulation.
 
@@ -423,7 +422,7 @@ There are also some external (non-automated) tests which are more advanced.
 Currently, the most complicated test validates the formulation of the equations
 of motion for a bicycle (a system with configuration and velocity constraints),
 symbolically linearizes it, and compares it (successfully) to benchmark values
-\cite{Meijaard2007}.
+presented in \cite{Meijaard2007}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{USAGE}
@@ -447,8 +446,9 @@ can be found on the softwares' respective web sites, www.python.org and
 www.sympy.org.
 
 To run a full PyDy example from equation of motion generation to simulation and
-visualization, Python and at least the scientific Python (SciPy) software stack
-http://scipy.github.com/stackspec.html must be obtained. We make use of these
+visualization, Python and at least the Scientific Python stack (SciPy)
+\cite{SciPyStackGithub} must be obtained. SciPy provides more comprehensive
+installation instructions than space permits here, but we make use of these
 packages in the SciPy stack in the previous demo problem:
 %
 \begin{itemize}
@@ -459,12 +459,11 @@ packages in the SciPy stack in the previous demo problem:
 \end{itemize}
 
 Download and installation instructions for various platforms are available on
-their respective web sites. But it is worth noting that these packages are a
-part of most of the widely used scientific Python distributions. Downloading a
+their respective web sites. But it is worth noting that these packages are part
+of most of the widely used scientific Python distributions. Downloading a
 distribution binary is generally the easiest method of installing \emph{all} of
-the needed software for a user unfamiliar with Python.
-Popular scientific distributions that provide the needed software are listed
-below:
+the needed software for a user unfamiliar with Python. Popular scientific
+distributions that provide the needed software are listed below:
 %
 \begin{itemize}
   \item Enthought: http://www.enthought.com/
@@ -473,15 +472,12 @@ below:
   \item Python(x,y): http://www.pythonxy.com
 \end{itemize}
 
-SciPy provides more comprehensive installation instructions than space permits
-here: http://scipy.github.com/install.html.
-
 The first step in doing multibody dynamics with Python is to get familiar using
 \verb|mechanics|\footnote{Some may prefer to learn Python and the SciPy Stack
 first, but the authors do not think this is such a necessity. It boils down to
 preference and learning style}. The first stop is the SymPy documentation which
-is available online at http://docs.sympy.org/. The documentation provides
-detailed instructions on installation, has introductory tutorials, lists common
+is available online \cite{SymPyDocs}. The documentation provides detailed
+instructions on installation, has introductory tutorials, lists common
 mistakes, details development procedures and the internal architecture, and
 contains detailed documentation for all of the subpackages and modules. In
 particular, the \verb|mechanics| documentation contains over 60 pages that aim
@@ -517,7 +513,7 @@ Kane's method powers many of the dynamic system software packages available
 \cite{Sayers1990, Enlighten2013} due to its detailed bookkeeping design and
 ease of mapping to programming languages. Kane's method  has influenced the
 design of \verb|mechanics| a great deal, but the code is structured so that any
-method for deriving the equations could be used.  This is possible because we
+method for deriving the equations can be used. This is possible because we
 separated the kinematic code from the equations of motion generation code. We
 have recently included Lagrange’s method to demonstrate that unique ability.
 
@@ -554,7 +550,7 @@ spread out over several modules which are explained in the following list:
         inertia tensor. Dyadics support all of the common operations, much
         similar to the Vector class.
       \item[dynamicsymbols] is a function that is used to facilitate the generation
-        of time dependent quantities and their derivatives. This variables are
+        of time dependent quantities and their derivatives. These variables are
         created as SymPy \verb|Function|s of time, where the default time is
         the symbols \verb|t|.
     \end{description}
@@ -595,82 +591,77 @@ spread out over several modules which are explained in the following list:
     desired generalized coordinates and optionally forces acting on the system,
     velocity constraints, and an inertial reference frame. If velocity
     constraints are supplied, Lagrange multipliers are generated to account for
-    them and non-conservative forces are appropriately handled if applied they
-    affect the system.
+    them and non-conservative forces are appropriately handled if they affect
+    the system.
 \end{description}
 
 %%%%%%%%%%%% JASON ABOVE HERE %%%%%%%%%%%%
 %%%%%%%%%%%% GILBERT BELOW HERE %%%%%%%%%%
 \subsection*{ESSENTIAL}
-As previously shown, the submodule essential.py (which is the core of
-sympy.physics.mechanics) is made of \verb|ReferenceFrame|, \verb|Vector|,
-\verb|Dyadic|, and \verb|dynamicsymbols| (as well as some output functions).
+As previously mentioned, the submodule essential.py (which is the core of
+sympy.physics.mechanics) includes \verb|ReferenceFrame|, \verb|Vector|,
+\verb|Dyadic|, and \verb|dynamicsymbols|, as well as some output functions.
 These classes will be explained in some detail, to allow for a greater
 understanding of how our software was written and how it functions.
 
 Firstly, \verb|dynamicsymbols| will be explained - it is merely a shortcut to
 producing quantities which are functions of time.
-It is included in essential for 2 reasons: specifics relating to Python
+It is included for two reasons: specifics relating to Python
 importing requirements, and because \verb|dynamicsymbols| defines the symbol
-used to represent time (default ``t'').
+used to represent time (default ``\verb|t|'').
 All of the vector calculus methods assume that functions of time define
 rotations between \verb|ReferenceFrame|s; if basic symbols or expressions which
 are not functions of time are supplied, they will be treated as constants when
 differentiating with respect to time.
 
 The relationship between \verb|ReferenceFrame| and \verb|Vector| is very
-complex; we will attempt to describe it here.
-Upon initialization, a \verb|ReferenceFrame| has 3 vectors which are created,
-representing the orthonormal basis vectors of that reference frame.
-A \verb|Vector| is made up of a list of segments per frame; for each unique
-\verb|ReferenceFrame| involved in the definition of a vector, one element in
-this list exists.
-Each element in the list contains the associated \verb|ReferenceFrame| and a
-$3\times1$ SymPy matrix representing the measure numbers for each frame.
-The basis vectors which are created upon \verb|ReferenceFrame| initialization
-therefore have a list of length 1, made up of the \verb|ReferenceFrame| they
-are created in and a matrix that defines one of the standard basis vectors
-(e.g. $[1, 0, 0]$).
+complex. Upon initialization, a \verb|ReferenceFrame| has three vectors
+representing the orthonormal basis vectors of that reference frame. A
+\verb|Vector| is made up of a list of segments per associated frame. For each
+unique \verb|ReferenceFrame| involved in the definition of a vector, one
+element in this list exists. Each element in the list contains the associated
+\verb|ReferenceFrame| and a $3\times1$ SymPy matrix representing the measure
+numbers for each frame. The basis vectors, which are created upon
+\verb|ReferenceFrame| initialization, have a list of length 1 and are made up
+of the \verb|ReferenceFrame| they are created in and a matrix that defines one
+of the standard basis vectors (e.g. $[1, 0, 0]$).
 
-As objects, both these basis vectors and other vectors are instances of the
-same \verb|Vector| class.
-More complicated \verb|Vector|s just consist of longer lists, and matrices
-which are not as basic; more frames can be introduced by adding vectors
+As objects, both these basis vectors and other general vectors are instances of
+the same \verb|Vector| class. More complicated \verb|Vector|s just consist of
+longer lists and matrices. More frames can be introduced by adding vectors
 together or performing more advanced vector and vector calculus operations.
 
 The final two parts of \verb|Vector|'s design are in the users interaction with
-these objects - creating and displaying them.
-Direct initialization of a \verb|Vector| object by a user should never take
-place; more complicated vectors will be formed out of basis vectors from the
-\verb|ReferenceFrame|s and operations between \verb|Vector|s.
-When displaying a \verb|Vector| object to the user, the complex implementation
-details of each instance are masked.
+these objects, i.e. creating and displaying them. Direct initialization of a
+\verb|Vector| object by a user should never take place; more complicated
+vectors will be formed out of basis vectors from the \verb|ReferenceFrame|s and
+operations between \verb|Vector|s. When displaying a \verb|Vector| object to
+the user, the complex implementation details of each instance are masked.
 Instead, the user only sees something along the following lines:
 \begin{verbatim}
 3*A.x + 5*A.y + sin(theta)*C.z
 \end{verbatim}
 Each measure number and accompanying basis vector are printed out in a way that
-the output can be copied and reentered to form the \verb|Vector| again.
-This leaves our \verb|Vector| class as a symbolic object (although, not a
-subclass of the main SymPy \verb|Expr| class) which users will interact with on
-a symbolic/mathematical level; the complex initialization should never have to
-be done by hand, making use of this class is easy for people not intimately
+the output can be copied and reentered to form the \verb|Vector| again.  This
+leaves our \verb|Vector| class as a symbolic object (although, not a subclass
+of the main SymPy \verb|Expr| class) which users will interact with on a
+symbolic/mathematical level. The complex initialization should never have to be
+done by hand, thus making use of this class is easy for people not intimately
 familiar with Python and SymPy.
 
 In order to allow interactions between vectors defined in different reference
 frames, information is stored which relates each reference frame to others.
-The user defines how one frame is oriented to another, using an arbitrary axis,
-standard body or space Euler angles, or Euler parameters.
-Once this is defined, each of the involved \verb|ReferenceFrame|s sets its
-internal dictionary where a pointer to the other frame and the generated
-direction cosine matrix are stored together (transposing happens for one of the
-frames).
-When the orientation matrix between 2 frames is requested, if it has not
-already been defined, the code will search through all possible branches to
-find the other frame, and then multiply all of the orientation matrices in
-order to generate the direction cosine matrix between the two frames.
-After doing so, it will be saved so in the future searching does not have to
-happen again.
+The user defines how one frame is oriented to another, using a simple rotation
+around an arbitrary axis, standard body- or space-fixed angles, quaternions, or
+Euler parameters. Once this is defined, each of the involved
+\verb|ReferenceFrame|s sets its internal dictionary where a pointer to the
+other frame and the generated direction cosine matrix are stored together
+(transposing happens for one of the frames). When the orientation matrix
+between two frames is requested, if it has not already been defined, the code
+will search through all possible branches to find the other frame, and then
+multiply all of the orientation matrices in order to generate the direction
+cosine matrix between the two frames. After doing so, it will be saved so
+future searching does not have to happen again.
 
 Angular velocities between frames are set in a similar way.
 When the user orients one frame relative to another, the angular velocity is
@@ -679,8 +670,8 @@ This is usually not desirable though, so the user is free to overwrite the
 angular velocity vector between frames.
 Again, setting this in one frame will set an equal and opposite vector in the
 other frame, to ensure consistency.
-Also, the same tree searching occurs for angular velocities, except it involves
-adding angular velocity vectors instead of multiplying direction coside matrices.
+Also, the same tree search occurs for angular velocities, except it involves
+adding angular velocity vectors instead of multiplying direction cosine matrices.
 
 One potential pitfall is the possibility of a user closing a loop of
 \verb|ReferenceFrame|s.
@@ -692,12 +683,12 @@ Users are instructed to avoid doing this, and we feel it is an unlikely
 scenario, as it requires extra, unneeded work on the user's part.
 
 The \verb|Point| class functions in a similar manner to \verb|ReferenceFrame|,
-in that it has a tree which links the position of this points to other points
-and is searchable to find the position betwen two points which have not been
+in that it has a tree which links the position of this point to other points
+and is searchable to find the position between two points which have not been
 directly assigned.
 However, the \verb|Point| class does not extend this functionality to
 velocities; it only works for positions.
-This is due to the complexities of identifying bound/unbound vectors within
+This limitation is due to the complexities of identifying bound/unbound vectors within
 reference frames.
 It has been more reliable to ask the user to find these velocities themselves
 rather than attempting to do it automatically (and frequently incorrectly).
@@ -705,9 +696,9 @@ In order to help with this task, the \verb|Point| class has a number of methods
 using the one point and two point theorems \cite{Kane1985} to make this step
 easier.
 
-The \verb|Dyadic| object has a similar construction approach as \verb|Vector|;
-it is made up of a list of components.
-However, for a dyadic, there are 3 parts of each list entry: a measure number,
+The \verb|Dyadic| object has a similar construction approach as \verb|Vector|,
+i.e. it is made up of a list of components.
+However, for a dyadic, there are three parts of each list entry: a measure number,
 the first basis vector, and the second basis vector.
 The lists which compose a \verb|Dyadic| object look like:
 \begin{verbatim}
@@ -720,8 +711,8 @@ J*(A.x|A.x) + I*(A.x|B.y)
 which again follows the SymPy convention that the displayed version of this
 object can be copied and pasted in order to remake the object.
 The vector math and calculus associated with \verb|Dyadic| is similar to that
-in \verb|Vector|; usually either the first or second basis vector is operated
-upon, depending on side it is being dotted or crossed.
+in \verb|Vector|. The first or second basis vector is operated upon, depending
+on whether pre or post dot and cross products are used.
 
 For a user, once all kinematics and system parameters have been defined, the
 next step is generating the equations of motion.
@@ -771,12 +762,13 @@ this is shown in equation (\ref{eq:uncon_to_con}).
 \end{equation}
 
 The formulation of the generalized inertia forces is more complicated.
-First, we defined $\mathbf{F}_r^*$ differently, as in equation (x).
+First, we defined $\mathbf{F}_r^*$ differently, as in equation (\ref{eq:x}).
 \begin{equation}
 \mathbf{F}_r^* = \mathbf{M}_m \mathbf{\dot{u}} + \mathbf{M}_n
+\label{eq:x}
 \end{equation}
 $\mathbf{M}_m$ is the mass matrix of the system and $\mathbf{M}_n$ is all the
-terms in $\mathbf{F}_r^*$ which are not part of the mass matrix.  The
+terms in $\mathbf{F}_r^*$ which are not part of the mass matrix. The
 construction of these terms will be shown for a particle, but the procedure for
 rigid bodies is almost the same, albeit for the rotational components.  If we
 start by defining the velocity of a particle $P$ in the inertial frame $A$ as:
@@ -820,7 +812,7 @@ mass matrix would be:
 \mathbf{M}_m = -m \left[^A\underline{v}_r^P\right] \left[^A\underline{v}_r^P \right]^T
 \end{equation}
 
-In either case, the non mass matrix terms (which make up $M_n$) are the
+In either case, the non-mass matrix terms (which make up $M_n$) are the
 collection of terms that do not involve $\dot{u}$'s.
 As in Kane's method, the rotational and translational inertia forces and
 torques are multiplied by the angular and translational partial velocities,
@@ -833,9 +825,9 @@ The use of auxiliary speeds to bring noncontributing forces into evidence is
 another important part of utilizing Kane's method.
 Upon initialization of a \verb|KanesMethod| object, the user needs to supply
 auxiliary speeds.
-After that point though, assuming the auxiliary speeds were used correctly when
-forming velocities, the user does not have to worry about these speeds again;
-they will not show up in any output equations.
+After that point, assuming the auxiliary speeds were used correctly when
+forming velocities, the user does not have to worry about these speeds again
+and they will not show up in any output equations.
 One peculiarity that should be noted is the case when we have velocity
 constraints and auxiliary speeds.
 In order to form the correct auxiliary equations, the relationship between the
@@ -854,14 +846,15 @@ generalized speeds are used to form the partial velocities: independent or
 auxiliary.
 The relationship between the auxiliary speeds and constrained speeds is found
 the same way as the relationship between the independent speeds and constrained
-speeds - the matrix $A$ that is found relates auxiliary and constrained
-speeds.
+speeds, i.e. the matrix $\mathbf{A}$ that is found relates auxiliary and
+constrained speeds.
 Furthermore, the transformation from unconstrained auxiliary equations to the
 constrained auxiliary equations ($\mathbf{F} + \mathbf{F}^*=0$ to
 $\tilde{\mathbf{F}} + \tilde{\mathbf{F}}^* = 0$ is performed exactly the same
-way, just using the matrix $A$ that relates the auxiliary and constrained
-speeds.
-The entire process is invisible from the user's perspective.
+way, just using the matrix $\mathbf{A}$ that relates the auxiliary and
+constrained speeds.
+The entire process is invisible from the user's perspective, but available in
+the class's source code.
 
 We will only briefly discuss linearization here, as a more detailed description
 of the linearization procedure used within \verb|KanesMethod| can be found
@@ -873,7 +866,8 @@ dependent coordinates.  The important message for the user is that
 configuration constraints are not considered when forming the equations of
 motion, but if they exist and are not supplied, the linear equations that are
 generated will be incorrect.
-
+% TODO: The following paragraph seems out of place. Should it come before
+% linearization and also made more coherent?
 As the constrained generalized speeds are not substituted out of the equations
 generated, we will have fewer equations then independent and dependent speeds.
 If we have $n$ total generalized speeds and $p$ independent speeds, we are left
@@ -889,9 +883,11 @@ of the generalized speeds.
 %%%%%%%%%%%% GILBERT ABOVE HERE %%%%%%%%%%
 %%%%%%%%%%%% ANGADH BELOW HERE %%%%%%%%%%%
 \subsection*{LangrangesMethod Class}
-In sympy.physics.mechanics, we assume that 3 basic sets of equations are
+In sympy.physics.mechanics, we assume that three basic sets of equations are
 necessary to completely describe a system and obtain the symbolic equations
 using \verb|LagrangesMethod|. They are:
+% TODO: This notation doesn't seeem to match the previous. Don't vectors have
+% bars?
 
 \begin{align}
     0 &= \mathbf{m_{c}}(q, t) \dot{q} + \mathbf{f_{c}}(q, t) \label{eqn:lag_qd}\\
@@ -904,7 +900,7 @@ using \verb|LagrangesMethod|. They are:
 where $q$ represents a vector of generalized coordinates, $\dot{q}$ and
 $\ddot{q}$ are vectors of the first and second time derivatives of the
 generalized coordinates, $\mathbf{\lambda}$ is a vector of the Lagrange
-multipliers. $\mathbf{m_c}$, $\mathbf{m_dc}$, $\mathbf{m_d}$ and
+multipliers. $\mathbf{m_c}$, $\mathbf{m_{dc}}$, $\mathbf{m_d}$ and
 $\Lambda_c$ are coefficient matrices.
 Equation (\ref{eqn:lag_qd}) shows the constraint equations,
 (\ref{eqn:lag_qdd}) shows the
@@ -918,8 +914,13 @@ following form:
 \end{align}
 where $\mathbf{M}$ is the 'mass matrix', and $x$ is a vector of the states,
 namely the $\ddot{q}$'s and $\lambda$'s, if any.
+% TODO: This section is very brief and it seems like there needs to be some
+% closing to the section, or at least note why you don't explain this class in
+% more detail.
 
 \subsection*{ADDITIONAL FEATURES}
+% TODO: We could delete this section to give more space for the Lagrange
+% section. This isn't really that important for this paper.
 Dynamicists have varied tastes when it comes to naming conventions of
 orthonormal basis vectors. For example, while some may define $a_i
 \quad (i=x,y,z)$ as the basis vectors for a reference frame $A$, others may
@@ -945,12 +946,14 @@ been retained in PyDy.
 \section*{CONCLUSIONS}
 In this paper, we have presented a set of tools, PyDy, for forming the
 equations of motion of a constrained dynamic system in an automated fashion.
-The core of PyDy, the mechanics code within SymPy, is written in a high-level
-programming language on top of a fully function computer algebra system.
-We have demonstrated the use of our software, as well as how it fits into the
-larger scientific Python ecosystem.
-We also detailed how our software has been validated, why design decisions were
-made, and how its internal architecture functions.
+The core of PyDy, the mechanics package within SymPy, is written in a
+high-level programming language on top of a fully function computer algebra
+system. We have demonstrated the use of our software, as well as how it fits
+into the larger scientific Python ecosystem. We also detailed how our software
+has been validated, why design decisions were made, and how its internal
+architecture functions. All of the source code, including extra code which
+generates a two dimensional animation of the N-link pendulum, are available
+online \cite{SourceCode}.
 
 \section*{ACKNOWLEDGEMENTS}
 Three Google Summer of Code grants (2009, 2011, 2012) supported most of the

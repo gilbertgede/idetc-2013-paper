@@ -70,8 +70,8 @@ f.set_size_inches(6.5, 6.5)
 
 # PLOTTING
 for i in range(N):
-    ax[0].plot(t, y[:, i], label='q'+str(i))
-    ax[1].plot(t, y[:, i + N], label='u'+str(i))
+    ax[0].plot(t, y[:, i], label='$q_' + str(i) + '$')
+    ax[1].plot(t, y[:, i + N], label='$u_' + str(i) + '$')
 
 #figure(1)
 ax[0].legend(loc=0)
