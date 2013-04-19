@@ -262,8 +262,8 @@ angular velocity of each and every link must be found, as well as the velocity
 of each particle. The velocity of $i$-th particle is
 \begin{align*}
   %\omega_i &= u_i \cdot a_z\\
-  \underline{v}_i &= \underline{v}_{i-1} + \underline{\omega}_i \times
-  \underline{r}^i \qquad (i = 1,\dots,N)
+  \bar{v}_i &= \bar{v}_{i-1} + \bar{\omega}_i \times
+  \bar{r}^i \qquad (i = 1,\dots,N)
 \end{align*}
 
 This nesting of velocities is best addressed with a loop, something that a
@@ -773,27 +773,27 @@ construction of these terms will be shown for a particle, but the procedure for
 rigid bodies is almost the same, albeit for the rotational components.  If we
 start by defining the velocity of a particle $P$ in the inertial frame $A$ as:
 \begin{equation}
-^{A}\underline{v}^{P} = \sum_{i=1}^{n} {} ^{A}\underline{v}_{r}^{P}
+^{A}\bar{v}^{P} = \sum_{i=1}^{n} {} ^{A}\bar{v}_{r}^{P}
 \end{equation}
 the inertial force $R^*$ for that particle can be written as:
 \begin{align}
 %\begin{subequations}
-\underline{R}^* &= -\frac{^{A} d}{dt}(m ^A\underline{v}^P) \\
-&= -m \frac{^{A}d}{dt}^A\underline{v}^P - \dot{m} ^A\underline{v}^P \\
-&= -\dot{m} ^A\underline{v}^P - m \frac{^{A}d}{dt}\left(\sum_{i=1}^{n}{} ^A
-\underline{v}^P_i u_i \right) \\
-&= -\dot{m} ^A\underline{v}^P - m \sum_{i=1}^{n} \left( ^A\underline{v}_i^P
-\frac{d}{dt}u_i + u_i \frac{^{A}d}{dt} {}^A\underline{v}^P_i \right) \\
+\bar{R}^* &= -\frac{^{A} d}{dt}(m ^A\bar{v}^P) \\
+&= -m \frac{^{A}d}{dt}^A\bar{v}^P - \dot{m} ^A\bar{v}^P \\
+&= -\dot{m} ^A\bar{v}^P - m \frac{^{A}d}{dt}\left(\sum_{i=1}^{n}{} ^A
+\bar{v}^P_i u_i \right) \\
+&= -\dot{m} ^A\bar{v}^P - m \sum_{i=1}^{n} \left( ^A\bar{v}_i^P
+\frac{d}{dt}u_i + u_i \frac{^{A}d}{dt} {}^A\bar{v}^P_i \right) \\
 %\end{subequations}
 \end{align}
 We can then write:
 \begin{align}
-\mathbf{F^*}_r &= ^A\underline{v}^P_r \underline{R}^{*} \\
+\mathbf{F^*}_r &= ^A\bar{v}^P_r \bar{R}^{*} \\
 \mathbf{F^*}_r &= - \left[
-                   ^A\underline{v}^P_r \dot{m} ^A\underline{v}^P +
-                   ^A\underline{v}^P_r m \sum_{i=1}^{n} \left(
-                   \dot{u}_i ^A\underline{v}^P_i + u_i
-                   \frac{^{A}d}{dt} {}^A\underline{v}^P_i
+                   ^A\bar{v}^P_r \dot{m} ^A\bar{v}^P +
+                   ^A\bar{v}^P_r m \sum_{i=1}^{n} \left(
+                   \dot{u}_i ^A\bar{v}^P_i + u_i
+                   \frac{^{A}d}{dt} {}^A\bar{v}^P_i
                    \right)
                    \right]
 \end{align}
@@ -806,10 +806,10 @@ In fact, the location of the element in the mass matrix corresponds to the
 index of each partial velocity (the order is not important as long as it is
 consistent).
 If we wanted to define this another way, we could write a vertical vector of
-the partial velocities of particle $P$, $[^A\underline{v}^P_r]$, and then the
+the partial velocities of particle $P$, $[^A\bar{v}^P_r]$, and then the
 mass matrix would be:
 \begin{equation}
-\mathbf{M}_m = -m \left[^A\underline{v}_r^P\right] \left[^A\underline{v}_r^P \right]^T
+\mathbf{M}_m = -m \left[^A\bar{v}_r^P\right] \left[^A\bar{v}_r^P \right]^T
 \end{equation}
 
 In either case, the non-mass matrix terms (which make up $M_n$) are the
@@ -840,7 +840,7 @@ both independent and auxiliary speeds, leaving the rest of the math the same.
 
 More plainly, for any instance of \verb|KanesMethod|, auxiliary speeds are
 removed from (set to 0) the accelerations and velocities that form
-$\underline{R}, \underline{T}, \underline{R}^*$, and $\underline{T}^*$.
+$\bar{R}, \bar{T}, \bar{R}^*$, and $\bar{T}^*$.
 The only difference between the user's and the internal instance is which
 generalized speeds are used to form the partial velocities: independent or
 auxiliary.
