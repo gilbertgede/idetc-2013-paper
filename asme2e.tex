@@ -241,7 +241,7 @@ suggest additional features, and improve upon and add to what we have already
 done, as well as ensure that the our code is constantly tested against any
 changes or updates to the base symbolic functionality offered by SymPy.
 
-In this paper, we discuss two main topics: 1) The interface to the EoM
+In this paper, we discuss two main topics: 1) The interface to the EOM
 generation sub-package sympy.physics.mechanics, and 2) the workflow for
 studying multibody dynamic systems (from derivation to simulation and
 visualization), which we call Python Dynamics (PyDy). We will explore these two
@@ -257,7 +257,7 @@ We now demonstrate the value of PyDy through the derivation of the $N$-pendulum
 system shown in Figure \ref{fig:n_pendulum}.  The system is defined by $N$
 massless links of length $l_i$ with particles of mass $m_i$ fixed at one end.
 We selected this problem because it illustrates the power and utility of having
-EoM generation code available within a full-featured programming language. The
+EOM generation code available within a full-featured programming language. The
 angular velocity of each and every link must be found, as well as the velocity
 of each particle. The velocity of $i$-th particle is
 \begin{align*}
@@ -440,7 +440,7 @@ SymPy version 0.7.2+\footnote{One of the major requirements for code added to
 SymPy is that every function and object has to be thoroughly tested and
 documented. SymPy has over 88\% of its code tested by the automated unit-tests.
 This ensures that no update causes regressions or breaks current functionality.
-Generally, the SymPy development branch is more stable and contains less bugs
+Generally, the SymPy development branch is more stable and contains fewer bugs
 than the numbered releases.}. Download and installation instructions for each
 can be found on the softwares' respective web sites, www.python.org and
 www.sympy.org.
@@ -475,7 +475,7 @@ distributions that provide the needed software are listed below:
 The first step in doing multibody dynamics with Python is to get familiar using
 \verb|mechanics|\footnote{Some may prefer to learn Python and the SciPy Stack
 first, but the authors do not think this is such a necessity. It boils down to
-preference and learning style}. The first stop is the SymPy documentation which
+preference and learning style.}. The first stop is the SymPy documentation which
 is available online \cite{SymPyDocs}. The documentation provides detailed
 instructions on installation, has introductory tutorials, lists common
 mistakes, details development procedures and the internal architecture, and
@@ -515,7 +515,7 @@ ease of mapping to programming languages. Kane's method  has influenced the
 design of \verb|mechanics| a great deal, but the code is structured so that any
 method for deriving the equations can be used. This is possible because we
 separated the kinematic code from the equations of motion generation code. We
-have recently included Lagrange’s method to demonstrate that unique ability.
+have recently included Lagrange's method to demonstrate that unique ability.
 
 SymPy's symbolic manipulation library provides the core functionality for the
 mechanics package. The majority of objects that are created when using SymPy
@@ -546,9 +546,9 @@ spread out over several modules which are explained in the following list:
         products, outer products, re-expression into different reference
         frames, and frame dependent differentiation.
       \item[Dyadic] is a class that represents a generic Dyadic. Dyadics are
-        used in this software as a basis independent method of defining an
-        inertia tensor. Dyadics support all of the common operations, much
-        similar to the Vector class.
+      used in this software as a basis independent method of defining an
+      inertia tensor. Dyadics support all of the common operations, similar to
+      the Vector class.
       \item[dynamicsymbols] is a function that is used to facilitate the generation
         of time dependent quantities and their derivatives. These variables are
         created as SymPy \verb|Function|s of time, where the default time is
@@ -714,7 +714,7 @@ on whether pre or post dot and cross products are used.
 
 For a user, once all kinematics and system parameters have been defined, the
 next step is generating the equations of motion.
-There are two included methods for generating EoM: Kane's and Lagrange's.
+There are two included methods for generating EOM: Kane's and Lagrange's.
 Both of these objects require the system's definition to be passed in using the
 container classes \verb|Particle| and \verb|RigidBody|.
 These objects (as described above) store the minimum amount of information for
@@ -732,18 +732,18 @@ constraint equations and $u$ is the list of independent and dependent speeds.
 \begin{align}
 %\begin{subequations}
 \mathbf{0} &= \mathbf{f_v}(q, u, t) \\
-\mathbf{0} &= \nabla_u \mathbf{f_v}(q, u, t) \mathbf{u} \\
+           &= \nabla_u \mathbf{f_v}(q, u, t) \mathbf{u} \\
            &= \mathbf{B} \mathbf{u} \\
-\mathbf{0} &= \mathbf{B}_{ind} \mathbf{u}_{ind} + \mathbf{B}_{dep}
+           &= \mathbf{B}_{ind} \mathbf{u}_{ind} + \mathbf{B}_{dep}
 \mathbf{u}_{dep} \\
-\mathbf{u}_{dep} &= - \mathbf{B}_{dep}^{-1} \mathbf{B}_{ind} \mathbf{u}_{ind} \\
-\mathbf{u}_{dep} &= \mathbf{A} \mathbf{u}_{ind}
+\implies \mathbf{u}_{dep} &= - \mathbf{B}_{dep}^{-1} \mathbf{B}_{ind} \mathbf{u}_{ind} \\
+                 &= \mathbf{A} \mathbf{u}_{ind}
 %\end{subequations}
 \label{eq:Ars_forming}
 \end{align}
-The configuration constraints are not actually important when forming the
-equations of motion, but they do need to be supplied if the system is going to
-be linearized \cite{Peterson2013}.
+The configuration constraints are used directly when forming the equations of
+motion, but they do need to be supplied if the system is going to be linearized
+\cite{Peterson2013}.
 
 From here, the formulation of the term $\mathbf{F}_r$ follows what Kane
 presented, with the advantage that all of the vector addition and
@@ -795,9 +795,7 @@ We can then write:
                    \right)
                    \right]
 \end{align}
-While the above equation looks very complicated, it is not difficult to form
-computationally.
-Observing this equation, we can see that only the mass and partial velocity
+From this equation, we can see that only the mass and partial velocity
 terms multiply $\dot{u}$ terms, or that the mass matrix coefficients are made
 up of the product of mass and the dot product between two partial velocities.
 In fact, the location of the element in the mass matrix corresponds to the
@@ -852,7 +850,7 @@ constrained speeds.
 The entire process is transparent to the user.
 
 As the constrained generalized speeds are not substituted out of the equations
-generated, we will have fewer equations then independent and dependent speeds.
+generated, we will have fewer equations than independent and dependent speeds.
 If we have $n$ total generalized speeds and $p$ independent speeds, we are left
 with $m=n-p$ constrained speeds.
 This means that we will have $p$ equations containing time derivatives of $n$
