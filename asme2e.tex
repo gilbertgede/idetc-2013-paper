@@ -17,7 +17,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% use twocolumn and 10pt options with the asme2e format
-\documentclass[twocolumn,10pt]{asme2e}
+\documentclass[twocolumn,10pt, final]{asme2e}
 \special{papersize=8.5in,11in}
 \usepackage{fancyvrb}
 \usepackage{graphicx}
@@ -98,7 +98,7 @@
 \papernum{IDETC/CIE 2013-13470}
 
 %%% You need to remove 'DRAFT: ' in the title for the final submitted version.
-\title{DRAFT: Constrained Multibody Dynamics With Python: From Symbolic
+\title{Constrained Multibody Dynamics With Python: From Symbolic
 Equation Generation to Publication}
 
 %%% first author
@@ -733,8 +733,8 @@ in equation (\ref{eq:Ars_forming}), where $f_v(q, u, t)$ is the list of
 constraint equations and $u$ is the list of independent and dependent speeds.
 \begin{align}
 %\begin{subequations}
-\mathbf{0} &= f_v(q, u, t) \\
-\mathbf{0} &= \nabla_u f_v(q, u, t) \mathbf{u} \\
+\mathbf{0} &= \mathbf{f_v}(q, u, t) \\
+\mathbf{0} &= \nabla_u \mathbf{f_v}(q, u, t) \mathbf{u} \\
            &= \mathbf{B} \mathbf{u} \\
 \mathbf{0} &= \mathbf{B}_{ind} \mathbf{u}_{ind} + \mathbf{B}_{dep}
 \mathbf{u}_{dep} \\
@@ -856,18 +856,6 @@ constrained speeds.
 The entire process is invisible from the user's perspective, but available in
 the class's source code.
 
-We will only briefly discuss linearization here, as a more detailed description
-of the linearization procedure used within \verb|KanesMethod| can be found
-elsewhere \cite{Peterson2013}.  The only complications that arise are when the
-user has a constrained system, in which case relationships between dependent
-and independent coordinates needs to be considered, as well as the relationship
-between dependent speeds and independent speeds, independent coordinates, and
-dependent coordinates.  The important message for the user is that
-configuration constraints are not considered when forming the equations of
-motion, but if they exist and are not supplied, the linear equations that are
-generated will be incorrect.
-% TODO: The following paragraph seems out of place. Should it come before
-% linearization and also made more coherent?
 As the constrained generalized speeds are not substituted out of the equations
 generated, we will have fewer equations then independent and dependent speeds.
 If we have $n$ total generalized speeds and $p$ independent speeds, we are left
@@ -880,21 +868,32 @@ When the velocity constraint equations are differentiated with respect to time,
 we get $m$ equations (the additional number we needed) containing up to $n$
 $\dot{u}$'s, giving the required information to solve for the time derivatives
 of the generalized speeds.
+
+We will only briefly discuss linearization here, as a more detailed description
+of the linearization procedure used within \verb|KanesMethod| can be found
+elsewhere \cite{Peterson2013}.  The only complications that arise are when the
+user has a constrained system, in which case relationships between dependent
+and independent coordinates needs to be considered, as well as the relationship
+between dependent speeds and independent speeds, independent coordinates, and
+dependent coordinates.  The important message for the user is that
+configuration constraints are not considered when forming the equations of
+motion, but if they exist and are not supplied, the linear equations that are
+generated will be incorrect.
+
+
 %%%%%%%%%%%% GILBERT ABOVE HERE %%%%%%%%%%
 %%%%%%%%%%%% ANGADH BELOW HERE %%%%%%%%%%%
 \subsection*{LangrangesMethod Class}
 In sympy.physics.mechanics, we assume that three basic sets of equations are
 necessary to completely describe a system and obtain the symbolic equations
 using \verb|LagrangesMethod|. They are:
-% TODO: This notation doesn't seeem to match the previous. Don't vectors have
-% bars?
 
 \begin{align}
     0 &= \mathbf{m_{c}}(q, t) \dot{q} + \mathbf{f_{c}}(q, t) \label{eqn:lag_qd}\\
     0 &= \mathbf{m_{dc}}(\dot{q}, q, t) \ddot{q} + \mathbf{f_{dc}}(\dot{q}, q,
         t) \label{eqn:lag_qdd}\\
     0 &= \mathbf{m_d}(\dot{q}, q, t) \ddot{q} + \Lambda_c(q, t)
-        \lambda + \mathbf{f_d}(\dot{q}, q, t) \label{eqn:lag_eom}
+        \mathbf{\lambda} + \mathbf{f_d}(\dot{q}, q, t) \label{eqn:lag_eom}
 \end{align}
 
 where $q$ represents a vector of generalized coordinates, $\dot{q}$ and
@@ -914,9 +913,11 @@ following form:
 \end{align}
 where $\mathbf{M}$ is the 'mass matrix', and $x$ is a vector of the states,
 namely the $\ddot{q}$'s and $\lambda$'s, if any.
-% TODO: This section is very brief and it seems like there needs to be some
-% closing to the section, or at least note why you don't explain this class in
-% more detail.
+
+Usage of the \verb|LagrangesMethod| class does not allow for bringing
+non-contributing forces into evidence. There is no linearization functionality
+either. Otherwise, it is provides similar mass matrix/forcing function outputs,
+just as in the \verb|KanesMethod| class.
 
 %%%%%%%%%%%% ANGADH ABOVE HERE %%%%%%%%%%%
 
