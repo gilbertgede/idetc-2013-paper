@@ -889,13 +889,12 @@ necessary to completely describe a system and obtain the symbolic equations
 using \verb|LagrangesMethod|. They are:
 
 \begin{align}
-    0 &= \mathbf{m_{c}}(q, t) \dot{q} + \mathbf{f_{c}}(q, t) \label{eqn:lag_qd}\\
-    0 &= \mathbf{m_{dc}}(\dot{q}, q, t) \ddot{q} + \mathbf{f_{dc}}(\dot{q}, q,
+    \mathbf{0} &= \mathbf{m_{c}}(q, t) \dot{q} + \mathbf{f_{c}}(q, t) \label{eqn:lag_qd}\\
+    \mathbf{0} &= \mathbf{m_{dc}}(\dot{q}, q, t) \ddot{q} + \mathbf{f_{dc}}(\dot{q}, q,
         t) \label{eqn:lag_qdd}\\
-    0 &= \mathbf{m_d}(\dot{q}, q, t) \ddot{q} + \Lambda_c(q, t)
+    \mathbf{0} &= \mathbf{m_d}(\dot{q}, q, t) \ddot{q} + \Lambda_c(q, t)
         \mathbf{\lambda} + \mathbf{f_d}(\dot{q}, q, t) \label{eqn:lag_eom}
 \end{align}
-
 where $q$ represents a vector of generalized coordinates, $\dot{q}$ and
 $\ddot{q}$ are vectors of the first and second time derivatives of the
 generalized coordinates, $\mathbf{\lambda}$ is a vector of the Lagrange
@@ -914,9 +913,22 @@ following form:
 where $\mathbf{M}$ is the 'mass matrix', and $x$ is a vector of the states,
 namely the $\ddot{q}$'s and $\lambda$'s, if any.
 
+Much like the \verb|KanesMethod| class, the\verb|LagrangesMethod| class is
+initialized by suppliying properties that describe a system: the Lagrangian, a
+list of the generalized coordinates, holonomic and non-holonomic constraint
+equations (if any), the forces and/or moments acting on the system, and the
+inertial reference frame. An idiosyncracy is that the \verb|LagrangesMethod|
+class requires that holonomic constraint equation be supplied after taking its
+first time derivative. The forces supplied upon initialization are primarily to
+account for the non-conservative forces acting on the system as the conservative
+forces are accounted for in the computation of the Lagrangian. Naturally, the
+user is not enforced to supply a system's Lagrangian; he/she may also
+supply the system's kinetic energy and account for any conservative and/or
+non-conservative forces in the force list.
+
 Usage of the \verb|LagrangesMethod| class does not allow for bringing
 non-contributing forces into evidence. There is no linearization functionality
-either. Otherwise, it is provides similar mass matrix/forcing function outputs,
+either. Otherwise, it provides similar mass matrix/forcing function outputs,
 just as in the \verb|KanesMethod| class.
 
 %%%%%%%%%%%% ANGADH ABOVE HERE %%%%%%%%%%%
