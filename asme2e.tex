@@ -17,7 +17,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% use twocolumn and 10pt options with the asme2e format
-\documentclass[twocolumn,10pt, final]{asme2e}
+\documentclass[twocolumn,10pt,final]{asme2e}
 \special{papersize=8.5in,11in}
 \usepackage{fancyvrb}
 \usepackage{graphicx}
@@ -595,8 +595,6 @@ spread out over several modules which are explained in the following list:
     the system.
 \end{description}
 
-%%%%%%%%%%%% JASON ABOVE HERE %%%%%%%%%%%%
-%%%%%%%%%%%% GILBERT BELOW HERE %%%%%%%%%%
 \subsection*{ESSENTIAL}
 As previously mentioned, the submodule essential.py (which is the core of
 sympy.physics.mechanics) includes \verb|ReferenceFrame|, \verb|Vector|,
@@ -654,7 +652,7 @@ frames, information is stored which relates each reference frame to others.
 The user defines how one frame is oriented to another, using a simple rotation
 around an arbitrary axis, standard body- or space-fixed angles, quaternions, or
 Euler parameters. Once this is defined, each of the involved
-\verb|ReferenceFrame|s sets its internal dictionary where a pointer to the
+\verb|ReferenceFrame|s sets its internal dictionary, where a pointer to the
 other frame and the generated direction cosine matrix are stored together
 (transposing happens for one of the frames). When the orientation matrix
 between two frames is requested, if it has not already been defined, the code
@@ -816,27 +814,25 @@ In either case, the non-mass matrix terms (which make up $M_n$) are the
 collection of terms that do not involve $\dot{u}$'s.
 As in Kane's method, the rotational and translational inertia forces and
 torques are multiplied by the angular and translational partial velocities,
-done for each body/particle, and then summed for all bodies and particles.
-In order to transform this for systems with nonholonomic constraints, we again
+for each body/particle, summed across all bodies and particles.
+To transform this for systems with nonholonomic constraints, we again
 use equation (\ref{eq:uncon_to_con}), substituting $\mathbf{F}^*$ for
 $\mathbf{F}$.
 
-The use of auxiliary speeds to bring noncontributing forces into evidence is
-another important part of utilizing Kane's method.
-Upon initialization of a \verb|KanesMethod| object, the user needs to supply
+Using auxiliary speeds to bring noncontributing forces into evidence is
+important to fully utilize Kane's method.
+Upon initialization of a \verb|KanesMethod| object the user needs to supply
 auxiliary speeds.
-After that point, assuming the auxiliary speeds were used correctly when
-forming velocities, the user does not have to worry about these speeds again
-and they will not show up in any output equations.
-One peculiarity that should be noted is the case when we have velocity
-constraints and auxiliary speeds.
-In order to form the correct auxiliary equations, the relationship between the
-auxiliary speeds and the constrained speeds needs to be found and used in
-forming the equations.
-The way this is implemented within the class is relatively simple.
-A second, internal \verb|KanesMethod| object is created which has the same
-constraints and constrained speeds, but the auxiliary speeds are supplied as
-both independent and auxiliary speeds, leaving the rest of the math the same.
+Assuming the auxiliary speeds were used correctly when forming velocities, the
+user does not have to worry about these speeds again, and they will not show up
+in any output equations.
+When there are velocity constraints and auxiliary speeds, the relationship
+between auxiliary speeds and constrained speeds needs to be found and
+used in forming the equations.
+To accomplish this, a second, internal \verb|KanesMethod| object is created
+which has the same constraints and constrained speeds, but auxiliary speeds are
+supplied as both independent and auxiliary speeds, leaving the rest of the math
+the same.
 
 More plainly, for any instance of \verb|KanesMethod|, auxiliary speeds are
 removed from (set to 0) the accelerations and velocities that form
@@ -844,17 +840,16 @@ $\bar{R}, \bar{T}, \bar{R}^*$, and $\bar{T}^*$.
 The only difference between the user's and the internal instance is which
 generalized speeds are used to form the partial velocities: independent or
 auxiliary.
-The relationship between the auxiliary speeds and constrained speeds is found
+The relationship between auxiliary speeds and constrained speeds is found
 the same way as the relationship between the independent speeds and constrained
-speeds, i.e. the matrix $\mathbf{A}$ that is found relates auxiliary and
+speeds, i.e. the matrix $\mathbf{A}$ is found to relate auxiliary and
 constrained speeds.
-Furthermore, the transformation from unconstrained auxiliary equations to the
+The transformation from unconstrained auxiliary equations to the
 constrained auxiliary equations ($\mathbf{F} + \mathbf{F}^*=0$ to
 $\tilde{\mathbf{F}} + \tilde{\mathbf{F}}^* = 0$ is performed exactly the same
 way, just using the matrix $\mathbf{A}$ that relates the auxiliary and
 constrained speeds.
-The entire process is invisible from the user's perspective, but available in
-the class's source code.
+The entire process is transparent to the user.
 
 As the constrained generalized speeds are not substituted out of the equations
 generated, we will have fewer equations then independent and dependent speeds.
@@ -875,19 +870,15 @@ elsewhere \cite{Peterson2013}.  The only complications that arise are when the
 user has a constrained system, in which case relationships between dependent
 and independent coordinates needs to be considered, as well as the relationship
 between dependent speeds and independent speeds, independent coordinates, and
-dependent coordinates.  The important message for the user is that
+dependent coordinates.  The important message for the user is
 configuration constraints are not considered when forming the equations of
-motion, but if they exist and are not supplied, the linear equations that are
+motion, but if they exist and are not supplied, the linear equations
 generated will be incorrect.
 
-
-%%%%%%%%%%%% GILBERT ABOVE HERE %%%%%%%%%%
-%%%%%%%%%%%% ANGADH BELOW HERE %%%%%%%%%%%
 \subsection*{LangrangesMethod Class}
 In sympy.physics.mechanics, we assume that three basic sets of equations are
 necessary to completely describe a system and obtain the symbolic equations
-using \verb|LagrangesMethod|. They are:
-
+using \verb|LagrangesMethod|:
 \begin{align}
     \mathbf{0} &= \mathbf{m_{c}}(q, t) \dot{q} + \mathbf{f_{c}}(q, t) \label{eqn:lag_qd}\\
     \mathbf{0} &= \mathbf{m_{dc}}(\dot{q}, q, t) \ddot{q} + \mathbf{f_{dc}}(\dot{q}, q,
@@ -913,28 +904,26 @@ following form:
 where $\mathbf{M}$ is the 'mass matrix', and $x$ is a vector of the states,
 namely the $\ddot{q}$'s and $\lambda$'s, if any.
 
-Much like the \verb|KanesMethod| class, the\verb|LagrangesMethod| class is
-initialized by suppliying properties that describe a system: the Lagrangian, a
-list of the generalized coordinates, holonomic and non-holonomic constraint
-equations (if any), the forces and/or moments acting on the system, and the
-inertial reference frame. An idiosyncracy is that the \verb|LagrangesMethod|
-class requires that holonomic constraint equation be supplied after taking its
-first time derivative. The forces supplied upon initialization are primarily to
-account for the non-conservative forces acting on the system as the conservative
-forces are accounted for in the computation of the Lagrangian. Naturally, the
-user is not enforced to supply a system's Lagrangian; he/she may also
-supply the system's kinetic energy and account for any conservative and/or
+The \verb|LagrangesMethod| class is initialized by suppliying properties that
+describe a system: the Lagrangian, a list of the generalized coordinates,
+holonomic and non-holonomic constraint equations (if any), the forces and/or
+moments acting on the system, and the inertial reference frame.
+The \verb|LagrangesMethod| class requires that holonomic constraint equation be
+supplied after taking its first time derivative.
+The forces supplied upon initialization are primarily to account for the
+non-conservative forces acting on the system as the conservative forces are
+accounted for in the computation of the Lagrangian.
+Instead of the system's Lagrangian, the user may
+supply the system's kinetic energy, and account for any conservative and/or
 non-conservative forces in the force list.
 
 Usage of the \verb|LagrangesMethod| class does not allow for bringing
-non-contributing forces into evidence. There is no linearization functionality
-either. Otherwise, it provides similar mass matrix/forcing function outputs,
-just as in the \verb|KanesMethod| class.
-
-%%%%%%%%%%%% ANGADH ABOVE HERE %%%%%%%%%%%
+non-contributing forces into evidence, or linearization functionality.
+Otherwise, it provides mass matrix/forcing function outputs as in the
+\verb|KanesMethod| class.
 
 \section*{CONCLUSIONS}
-In this paper, we have presented a set of tools, PyDy, for forming the
+We have presented a set of tools, PyDy, for forming the
 equations of motion of a constrained dynamic system in an automated fashion.
 The core of PyDy, the mechanics package within SymPy, is written in a
 high-level programming language on top of a fully function computer algebra
